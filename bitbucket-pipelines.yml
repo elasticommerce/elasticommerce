@@ -1,0 +1,9 @@
+image: smartdevs/magento-php-7.0-cli:latest
+pipelines:
+  default:
+    - step:
+        script:
+          - composer install
+          - ls -lisah
+          - ls -lisah vendor
+          - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit

@@ -1,0 +1,25 @@
+{
+  "name": "smart-devs/elasticommerce-base",
+  "license": "private",
+  "type": "library",
+  "version": "1.0.0",
+  "description": "ElastiCommerce Libary",
+  "require": {
+    "elasticsearch/elasticsearch": "~5.3",
+    "psr/log": "~1.0",
+    "symfony/yaml": "~3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "SmartDevs\\ElastiCommerce\\": "src/ElastiCommerce/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SmartDevs\\ElastiCommerce\\Test\\": "test/ElastiCommerce/"
+    }
+  }
+}
