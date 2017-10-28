@@ -4,6 +4,4 @@ pipelines:
     - step:
         script:
           - composer install
-          - ls -lisah
-          - ls -lisah vendor
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
