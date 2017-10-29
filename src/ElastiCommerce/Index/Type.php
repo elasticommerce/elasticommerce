@@ -3,11 +3,17 @@ declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index;
 
+use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 use SmartDevs\ElastiCommerce\Implementor\Index\TypeImplementor;
 use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
 class Type extends DataObject implements TypeImplementor
 {
+
+    /**
+     * @var MappingImplementor
+     */
+    protected $mapping = null;
 
     public function __construct()
     {
@@ -38,5 +44,36 @@ class Type extends DataObject implements TypeImplementor
     public function getName(): string
     {
         return $this->getId('name');
+    }
+
+    /**
+     * set index type mapping
+     *
+     * @param MappingImplementor $mapping
+     * @return TypeImplementor
+     */
+    public function setMapping(MappingImplementor $mapping): TypeImplementor
+    {
+        $this->mapping = $mapping;
+    }
+
+    /**
+     * get index type mapping
+     *
+     * @return MappingImplementor
+     */
+    public function getMapping(): MappingImplementor
+    {
+        return $this->mapping;
+    }
+
+    /**
+     * checks type has valid mapping
+     *
+     * @return bool
+     */
+    public function hasMapping(): bool
+    {
+        return null !== $this->mapping && $this->mapping instanceof MappingImplementor;
     }
 }
