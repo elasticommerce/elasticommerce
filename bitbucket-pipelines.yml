@@ -8,7 +8,9 @@ pipelines:
           - composer install
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
-definitions:
-  services:
-    elasticsearch:
-      image: smartdevs/elasticsearch:
+        services:
+          - elasticsearch
+  definitions:
+    services:
+      elasticsearch:
+        image: smartdevs/elasticsearch:
