@@ -1,8 +1,10 @@
 <?php
 
-namespace SmartDevs\ElastiCommerce\Index\Mapping\Fields;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields;
 
-final class FieldTypeNumeric extends FieldTypeBase implements FieldTypeInterface
+use SmartDevs\ElastiCommerce\Implementor\Index\Type\Mapping\Field\FieldTypeImplementor;
+
+final class FieldTypeNumeric extends FieldTypeBase implements FieldTypeImplementor
 {
     protected $validTypes = [
         'long',

@@ -1,7 +1,7 @@
 <?php
 
-namespace SmartDevs\ElastiCommerce\Index\Mapping;
-#use SmartDevs\ElastiCommerce\Index\Mapping\Fields\FieldCollection;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\FieldCollection;
 
 /**
  * Class DynamicTemplatesCollection

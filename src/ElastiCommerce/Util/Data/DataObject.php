@@ -611,7 +611,7 @@ class DataObject implements ArrayAccess, Serializable
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
-        $result = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
+        $result = preg_replace('/_+/', '_', strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name)));
         self::$_underscoreCache[$name] = $result;
         return $result;
     }

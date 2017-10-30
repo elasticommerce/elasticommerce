@@ -1,8 +1,10 @@
 <?php
 
-namespace SmartDevs\ElastiCommerce\Index\Mapping\Fields;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields;
 
-final class FieldTypeString extends FieldTypeBase implements FieldTypeInterface
+use SmartDevs\ElastiCommerce\Implementor\Index\Type\Mapping\Field\FieldTypeImplementor;
+
+final class FieldTypeString extends FieldTypeBase implements FieldTypeImplementor
 {
     /**
      * valid parameters for generating mapping schema

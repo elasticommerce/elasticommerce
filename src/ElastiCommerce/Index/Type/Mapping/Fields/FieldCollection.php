@@ -1,14 +1,11 @@
 <?php
-namespace SmartDevs\ElastiCommerce\Index\Mapping\Fields;
 
-use SmartDevs\ElastiCommerce\Util\Data\DataCollection;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields;
 
-/**
- * Created by PhpStorm.
- * User: dng
- * Date: 18.07.16
- * Time: 17:20
- */
+use SmartDevs\ElastiCommerce\Util\Data\{
+    DataCollection, DataObject
+};
+
 class FieldCollection extends DataCollection
 {
 
@@ -18,7 +15,7 @@ class FieldCollection extends DataCollection
 
     public function __construct()
     {
-        $this->setItemObjectClass('\SmartDevs\ElastiCommerce\Index\Mapping\Fields\FieldTypeBase');
+        $this->setItemObjectClass(DataObject::class);
     }
 
     /**
@@ -128,10 +125,11 @@ class FieldCollection extends DataCollection
      * @param string $type
      * @return FieldTypeBase
      */
-    public function getField($name, $type)
+    public function getField($name, $type = '')
     {
         //field does not exist create a new one
-        if (null === $this->getItemById($name)) {
+        $property = $this->getItemById($name);
+        if ($property === null) {
             $property = $this->getTypeInstance($type);
             $property->setName($name);
             //add item to collection

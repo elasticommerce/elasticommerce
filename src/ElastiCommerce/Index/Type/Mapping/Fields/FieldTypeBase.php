@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartDevs\ElastiCommerce\Index\Mapping\Fields;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields;
 
 use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
