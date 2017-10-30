@@ -137,7 +137,10 @@ class IndexFacade implements IndexFacadeImplementor
             throw new \InvalidArgumentException('Parameter $prefix is empty');
         }
         $indexes = $this->getOrphanedIndices($prefix);
-        return $this->delete($indexes);
+        if (true === is_array($indexes) && count($indexes) > 0) {
+            return $this->delete($indexes);
+        }
+        return true;
     }
 
 
