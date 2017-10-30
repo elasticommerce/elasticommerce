@@ -1,0 +1,2 @@
+my_whitespace_analyzer:
+  type: whitespace

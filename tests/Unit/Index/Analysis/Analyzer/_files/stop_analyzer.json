@@ -1,0 +1,9 @@
+{
+  "type": "stop",
+  "stopwords": [
+    "der",
+    "die",
+    "das"
+  ],
+  "stopwords_path": "\/var\/www\/"
+}

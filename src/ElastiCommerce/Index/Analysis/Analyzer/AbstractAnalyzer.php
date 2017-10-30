@@ -1,11 +1,11 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Analyzer;
-
+use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
 /**
  * Class AbstractAnalyzer
  * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Analyzer
  */
-abstract class AbstractAnalyzer extends \SmartDevs\Util\Data\DataObject
+abstract class AbstractAnalyzer extends DataObject
 {
     /**
      * valid array keys mapped as properties

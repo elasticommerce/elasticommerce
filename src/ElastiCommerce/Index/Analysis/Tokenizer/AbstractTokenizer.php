@@ -1,7 +1,7 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer;
-
-abstract class AbstractTokenizer extends \SmartDevs\Util\Data\DataObject
+use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
+abstract class AbstractTokenizer extends DataObject
 {
     public function __construct()
     {

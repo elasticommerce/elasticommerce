@@ -18,5 +18,6 @@ class TokenFilterCollection extends AbstractCollection
      * @var string[]
      */
     protected $classMapping = [
+
     ];
 }

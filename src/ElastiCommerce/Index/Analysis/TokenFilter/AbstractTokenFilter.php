@@ -1,7 +1,9 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter;
+use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
 
-abstract class AbstractTokenFilter extends \SmartDevs\Util\Data\DataObject
+
+abstract class AbstractTokenFilter extends DataObject
 {
     public function __construct()
     {

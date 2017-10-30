@@ -2,8 +2,10 @@
 declare(strict_types = 1);
 
 namespace SmartDevs\ElastiCommerce\Index\Analysis;
+use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
 
-abstract class AbstractCollection extends \SmartDevs\Util\Data\DataObjectCollection
+
+abstract class AbstractCollection extends DataCollection
 {
 
     /**

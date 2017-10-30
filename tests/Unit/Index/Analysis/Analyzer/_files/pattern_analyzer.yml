@@ -1,0 +1,9 @@
+my_pattern_analyzer:
+  type: pattern
+  pattern: "\\W+"
+  lowercase: true
+  stopwords:
+    - "der"
+    - "die"
+    - "das"
+  stopwords_path: "/var/www/"

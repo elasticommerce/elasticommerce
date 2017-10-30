@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<my_custom_analyzer type="custom">
+    <char_filter>
+        <my_char_filter/>
+    </char_filter>
+    <filter>
+        <my_filter/>
+        <my_other_filter/>
+    </filter>
+</my_custom_analyzer>

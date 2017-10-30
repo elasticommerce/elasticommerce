@@ -1,0 +1,10 @@
+{
+  "type": "custom",
+  "char_filter": [
+    "my_char_filter"
+  ],
+  "filter": [
+    "my_filter",
+    "my_other_filter"
+  ]
+}

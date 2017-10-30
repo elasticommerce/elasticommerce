@@ -1,7 +1,8 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Index\Analysis\CharFilter;
+use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
 
-abstract class AbstractCharFilter extends \SmartDevs\Util\Data\DataObject
+abstract class AbstractCharFilter extends DataObject
 {
     public function __construct()
     {

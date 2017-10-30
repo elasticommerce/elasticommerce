@@ -1,0 +1,10 @@
+{
+  "type": "standard",
+  "max_token_length": 150,
+  "stopwords": [
+    "der",
+    "die",
+    "das"
+  ],
+  "stopwords_path": "\/var\/www\/"
+}
