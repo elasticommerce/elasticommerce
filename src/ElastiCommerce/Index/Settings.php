@@ -1,12 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index;
 
 use SmartDevs\ElastiCommerce\Exception;
 use SmartDevs\ElastiCommerce\Implementor\Config;
 use SmartDevs\ElastiCommerce\Index\Analysis\{
-    CharFilterCollection, TokenizerCollection, TokenFilterCollection, AnalyzerCollection
+    AnalyzerCollection, CharFilterCollection, TokenFilterCollection, TokenizerCollection
 };
 
 class Settings
@@ -155,7 +155,7 @@ class Settings
      *
      * @return Settings
      */
-    protected function initialize(): Mappings
+    protected function initialize(): Settings
     {
         $this->readMappingFromConfigFile();
         return $this;

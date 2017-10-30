@@ -7,7 +7,7 @@ pipelines:
         script:
           - composer install
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
-          - export ES_HOST=127.0.0.1
+          - export ES_HOST=localhost
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=Integration
         services:
           - elasticsearch

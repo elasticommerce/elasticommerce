@@ -3,10 +3,12 @@
 namespace SmartDevs\ElastiCommerce;
 
 use SmartDevs\ElastiCommerce\Common\Connection;
+use SmartDevs\ElastiCommerce\Facades\IndexFacade;
 use SmartDevs\ElastiCommerce\Implementor\Config;
-use SmartDevs\ElastiCommerce\Index\Settings;
-use SmartDevs\ElastiCommerce\Index\Mappings;
+use SmartDevs\ElastiCommerce\Implementor\Facades\IndexFacadeImplementor;
 use SmartDevs\ElastiCommerce\Index\BulkCollection;
+use SmartDevs\ElastiCommerce\Index\Settings;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping;
 
 class Indexer
 {
@@ -23,14 +25,21 @@ class Indexer
     protected $config = null;
 
     /**
-     * @var Index
+     * @var IndexFacadeImplementor
      */
     protected $index = null;
 
     /**
-     * @var Mappings
+     * current index name alias or tmp name for full reindex
+     *
+     * @var string
      */
-    protected $mappings = null;
+    protected $indexName = null;
+
+    /**
+     * @var Mapping
+     */
+    protected $mapping = null;
 
     /**
      * @var Settings
@@ -51,7 +60,7 @@ class Indexer
     {
         $this->config = $config;
         $this->settings = new Settings($config);
-        $this->mappings = new Mappings($config);
+        $this->mappings = new Mapping($config);
         $this->bulkCollection = new BulkCollection($config);
     }
 
@@ -82,12 +91,12 @@ class Indexer
     /**
      * get manager for index metadata operations
      *
-     * @return Index
+     * @return IndexFacadeImplementor
      */
-    protected function getIndex(): Index
+    protected function getIndex(): IndexFacadeImplementor
     {
         if (null === $this->index) {
-            $this->index = new Index($this->getConnection()->indices());
+            $this->index = new IndexFacade($this->getConnection()->indices());
         }
         return $this->index;
     }
@@ -117,9 +126,9 @@ class Indexer
     }
 
     /**
-     * @return Mappings
+     * @return Mapping
      */
-    public function getMappings(): Mappings
+    public function getMapping(): Mapping
     {
         return $this->mappings;
     }
@@ -140,12 +149,46 @@ class Indexer
         return $this->bulkCollection;
     }
 
+    /**
+     * get current index name
+     *
+     * @return string
+     */
+    protected function getIndexName(): string
+    {
+        if (null === $this->indexName) {
+            if (true === $this->isFullReindex()) {
+                $this->indexName = sprintf('%s_%u',
+                    $this->getConfig()->getIndexConfig()->getIndexAlias(),
+                    time());
+            } else {
+                $this->indexName = $this->getConfig()->getIndexConfig()->getIndexAlias();
+            }
+
+        }
+        return $this->indexName;
+    }
+
+    /**
+     * create new index
+     */
     public function createIndex()
     {
-        $alias = $this->getConfig()->getIndexConfig()->getIndexAlias();
         $this->getIndex()->create(
-            $alias,
+            $this->getIndexName(),
             $this->getConfig()->getIndexConfig()->getNumberOfShards(),
             $this->getConfig()->getIndexConfig()->getNumberOfReplicas());
+    }
+
+    /**
+     * rotate index
+     */
+    public function rotateIndex()
+    {
+        $this->getIndex()->rotateAlias(
+            $this->getIndexName(),
+            $this->getConfig()->getIndexConfig()->getIndexAlias()
+        );
+        $this->getIndex()->deleteOrphanedIndices($this->getConfig()->getIndexConfig()->getIndexAlias());
     }
 }
