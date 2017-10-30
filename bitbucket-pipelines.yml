@@ -7,13 +7,3 @@ pipelines:
         script:
           - composer install
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
-          - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
-        services:
-          - elasticsearch
-definitions:
-  services:
-    elasticsearch:
-      image: smartdevs/elasticsearch:latest
-      environment:
-        "bootstrap.memory_lock": "true"
-        "ES_JAVA_OPTS": "-Xms256m -Xmx256m"
