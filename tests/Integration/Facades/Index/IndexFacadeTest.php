@@ -27,8 +27,12 @@ class IndexFacadeTest extends TestCase
     protected function setUp()
     {
         if (null == $this->connection) {
+            $esHost = getenv('ES_HOST');
+            if (empty($esHost)) {
+                $esHost = 'elasticsearch';
+            }
             $this->connection = \Elasticsearch\ClientBuilder::create()
-                ->setHosts(['http://elasticsearch:9200'])
+                ->setHosts([sprintf('http://%s:9200', $esHost)])
                 ->setRetries(10)
                 ->build();
         }
@@ -294,7 +298,7 @@ class IndexFacadeTest extends TestCase
         $aliasName = uniqid();
         $this->facade->create($indexNameTarget, 1, 1);
         $this->facade->rotateAlias($indexNameTarget, $aliasName);
-        $this->assertTrue($this->facade->hasAlias($indexNameTarget,$aliasName));
+        $this->assertTrue($this->facade->hasAlias($indexNameTarget, $aliasName));
     }
 
     public function testAliasRotateWithExistent()
@@ -306,10 +310,10 @@ class IndexFacadeTest extends TestCase
         $this->facade->create($indexNameTarget, 1, 1);
         $this->facade->createAlias($indexNameSource, $aliasName);
         $this->assertTrue($this->facade->existsAlias($aliasName));
-        $this->assertTrue($this->facade->hasAlias($indexNameSource,$aliasName));
-        $this->assertFalse($this->facade->hasAlias($indexNameTarget,$aliasName));
+        $this->assertTrue($this->facade->hasAlias($indexNameSource, $aliasName));
+        $this->assertFalse($this->facade->hasAlias($indexNameTarget, $aliasName));
         $this->facade->rotateAlias($indexNameTarget, $aliasName);
-        $this->assertFalse($this->facade->hasAlias($indexNameSource,$aliasName));
-        $this->assertTrue($this->facade->hasAlias($indexNameTarget,$aliasName));
+        $this->assertFalse($this->facade->hasAlias($indexNameSource, $aliasName));
+        $this->assertTrue($this->facade->hasAlias($indexNameTarget, $aliasName));
     }
 }
