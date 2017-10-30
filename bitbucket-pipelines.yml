@@ -15,5 +15,5 @@ definitions:
     elasticsearch:
       image: smartdevs/elasticsearch:latest
       environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+        "bootstrap.memory_lock": "true"
+        "ES_JAVA_OPTS": "-Xms256m -Xmx256m"
