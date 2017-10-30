@@ -30,4 +30,18 @@ interface IndexFacadeImplementor
 
     public function rotateAlias(string $indexName, string $aliasName): bool;
 
+    /**
+     * get an array of orphaned indexes which don't has an alias
+     *
+     * @param string $prefix
+     * @return array
+     */
+    public function getOrphanedIndices(string $prefix): array;
+
+    /**
+     * deletes indexes with given prefix which don't has an alias
+     * @param string $prefix
+     * @return bool
+     */
+    public function deleteOrphanedIndices(string $prefix): bool;
 }

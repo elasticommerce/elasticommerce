@@ -1,9 +1,10 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Facades;
 
 use SmartDevs\ElastiCommerce\Implementor\Facades\IndexFacadeImplementor;
+use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 
 class IndexFacade implements IndexFacadeImplementor
 {
@@ -99,6 +100,46 @@ class IndexFacade implements IndexFacadeImplementor
     {
         return false;
     }
+
+    /**
+     * get an array of orphaned indexes which don't has an alias
+     *
+     * @param string $prefix
+     * @return array
+     */
+    public function getOrphanedIndices(string $prefix): array
+    {
+        if (true === empty($prefix)) {
+            throw new \InvalidArgumentException('Parameter $prefix is empty');
+        }
+        $searchPrefix = $prefix . '*';
+        $response = $this->indicesNamespace->get(['index' => $searchPrefix]);
+        $indexes = array_filter($response, function ($index) use ($prefix) {
+            if (false === isset($index['aliases'])) {
+                return true;
+            }
+            if (true === is_array($index['aliases']) && true === empty($index['aliases'])) {
+                return true;
+            }
+            return false;
+        });
+        return array_keys($indexes);
+    }
+
+    /**
+     * deletes indexes with given prefix which don't has an alias
+     * @param string $prefix
+     * @return bool
+     */
+    public function deleteOrphanedIndices(string $prefix): bool
+    {
+        if (true === empty($prefix)) {
+            throw new \InvalidArgumentException('Parameter $prefix is empty');
+        }
+        $indexes = $this->getOrphanedIndices($prefix);
+        return $this->delete($indexes);
+    }
+
 
     /**
      * refresh and index
@@ -230,6 +271,15 @@ class IndexFacade implements IndexFacadeImplementor
         $result = $this->indicesNamespace->updateAliases($parameters);
         return $result['acknowledged'] === true ? true : false;
     }
+
+    public function setMapping(string $indexName, MappingImplementor $mapping): bool
+    {
+        if (false === $this->exists($indexName)) {
+            throw new \SmartDevs\ElastiCommerce\Exception(sprintf('Index "%s" doesn\'t exists', $indexName));
+        }
+        return false;
+    }
+
 
     /**
      * @param string $aliasName
