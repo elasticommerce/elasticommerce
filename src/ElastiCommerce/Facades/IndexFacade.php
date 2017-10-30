@@ -209,7 +209,7 @@ class IndexFacade implements IndexFacadeImplementor
     }
 
     /**
-     * deletes an alias
+     * deletes an alias by an given index name
      *
      * @param string $aliasName
      * @return bool
