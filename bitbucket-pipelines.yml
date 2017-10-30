@@ -10,7 +10,7 @@ pipelines:
           - php vendor/bin/phpunit -c phpunit.xml --testsuite=unit
         services:
           - elasticsearch
-  definitions:
-    services:
-      elasticsearch:
-        image: smartdevs/elasticsearch:latest
+definitions:
+  services:
+    elasticsearch:
+      image: smartdevs/elasticsearch:latest
