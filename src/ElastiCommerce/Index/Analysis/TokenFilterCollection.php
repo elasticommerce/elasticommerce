@@ -18,6 +18,6 @@ class TokenFilterCollection extends AbstractCollection
      * @var string[]
      */
     protected $classMapping = [
-
+        'decompound' => TokenFilter\DecompoundTokenFilter::class
     ];
 }
