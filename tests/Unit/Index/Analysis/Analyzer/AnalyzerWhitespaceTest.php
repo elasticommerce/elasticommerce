@@ -48,7 +48,7 @@ class AnalyzerWhitespaceTest extends TestCase
         $this->assertTrue($this->_analyzer->getType() === WhitespaceAnalyzer::TYPE);
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/whitespace_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }

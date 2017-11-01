@@ -54,7 +54,7 @@ class AnalyzerStandardTest extends TestCase
         $this->assertTrue(array_key_exists('max_token_length', $data));
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/standard_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }

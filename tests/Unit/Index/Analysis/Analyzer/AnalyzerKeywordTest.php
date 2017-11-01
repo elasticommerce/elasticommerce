@@ -48,7 +48,7 @@ class AnalyzerKeywordTest extends TestCase
         $this->assertTrue($this->_analyzer->getType() === KeywordAnalyzer::TYPE);
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/keyword_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 
@@ -62,7 +62,7 @@ class AnalyzerKeywordTest extends TestCase
         $this->assertTrue($this->_analyzer->getType() === KeywordAnalyzer::TYPE);
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/keyword_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }

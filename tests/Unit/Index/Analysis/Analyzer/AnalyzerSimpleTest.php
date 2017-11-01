@@ -48,7 +48,7 @@ class AnalyzerSimpleTest extends TestCase
         $this->assertTrue($this->_analyzer->getType() === SimpleAnalyzer::TYPE);
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/simple_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }

@@ -53,7 +53,7 @@ class AnalyzerPatternTest extends TestCase
         $this->assertTrue(array_key_exists('stopwords_path', $data));
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/pattern_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }

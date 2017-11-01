@@ -53,7 +53,7 @@ class AnalyzerCustomTest extends TestCase
         $this->assertTrue(in_array('my_other_filter', $data['filter']));
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/custom_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 
@@ -72,7 +72,7 @@ class AnalyzerCustomTest extends TestCase
         $this->assertTrue(in_array('my_other_filter', $data['filter']));
         $this->assertJsonStringEqualsJsonFile(
             dirname(__FILE__) . '/_files/custom_analyzer.json',
-            json_encode($this->_analyzer->asSchema())
+            json_encode($this->_analyzer->toSchema())
         );
     }
 }
