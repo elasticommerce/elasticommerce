@@ -61,7 +61,7 @@ abstract class AbstractAnalyzer extends DataObject
             if (false === isset($xml->{$property}) || true === empty($xml->{$property})) {
                 continue;
             }
-            if ($xml->{$property}->count() > 0) {
+            if (count($xml->{$property}->children()) > 0) {
                 $this->setDataUsingMethod($property,
                     array_values(
                         array_map(function ($item) {
@@ -79,7 +79,7 @@ abstract class AbstractAnalyzer extends DataObject
     /**
      * get current object as array
      */
-    public function asSchema()
+    public function toSchema()
     {
         $data = $this->getData();
         unset($data['name']);

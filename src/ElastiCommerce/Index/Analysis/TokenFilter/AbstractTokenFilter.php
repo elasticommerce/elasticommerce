@@ -23,7 +23,7 @@ abstract class AbstractTokenFilter extends DataObject
     /**
      * get current object as array
      */
-    public function asConfig()
+    public function toSchema()
     {
         $data = $this->getData();
         unset($data['name']);

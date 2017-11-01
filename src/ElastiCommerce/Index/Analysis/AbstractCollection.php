@@ -1,8 +1,11 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index\Analysis;
-use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
+
+use SmartDevs\ElastiCommerce\Util\Data\{
+    DataCollection
+};
 
 
 abstract class AbstractCollection extends DataCollection
@@ -48,5 +51,14 @@ abstract class AbstractCollection extends DataCollection
             $this->setItem($typeInstance);
         }
         return $this;
+    }
+
+    public function toSchema(): array
+    {
+        $return = array();
+        foreach ($this->getItems() as $item) {
+            $return[$item->getName()] = $item->toSchema();
+        }
+        return $return;
     }
 }
