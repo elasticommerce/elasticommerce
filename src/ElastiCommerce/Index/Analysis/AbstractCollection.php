@@ -40,7 +40,7 @@ abstract class AbstractCollection extends DataCollection
      * @param \SimpleXMLElement $element
      * @return AbstractCollection
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractCollection
     {
         $node = $element->{static::NODE_NAME};
         foreach ($node->children() as $name => $data) {
