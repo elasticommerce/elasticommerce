@@ -195,7 +195,7 @@ class DataCollection implements IteratorAggregate, Countable, Serializable
      * @param DataObject $item
      * @return DataCollection
      */
-    protected function _addItem(BaseObject $item)
+    protected function _addItem(DataObject $item)
     {
         $this->_items[] = $item;
         return $this;
@@ -334,7 +334,7 @@ class DataCollection implements IteratorAggregate, Countable, Serializable
     /**
      * Retrieve collection empty item
      *
-     * @return BaseObject
+     * @return DataObject
      */
     public function getNewEmptyItem()
     {
