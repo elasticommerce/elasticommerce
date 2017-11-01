@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace SmartDevs\ElastiCommerce\Index\Type;
 
 use SmartDevs\ElastiCommerce\Implementor\Config;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\DynamicTemplatesCollection;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\DynamicTemplateCollection;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\FieldCollection;
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 
@@ -24,7 +24,7 @@ class Mapping implements MappingImplementor
     /**
      * list of dynamic templates
      *
-     * @var DynamicTemplatesCollection
+     * @var DynamicTemplateCollection
      */
     protected $dynamicTemplates = null;
 
@@ -117,10 +117,10 @@ class Mapping implements MappingImplementor
     protected function initMappingsFromXml(\SimpleXMLElement $xml): Mapping
     {
         //init dynamic templates
-        #$this->dynamicTemplates = new DynamicTemplatesCollection();
-        #if (true === property_exists($xml, 'dynamic_templates')) {
-        #    $this->dynamicTemplates->setXmlConfig($xml->dynamic_templates->children());
-        #}
+        $this->dynamicTemplates = new DynamicTemplateCollection();
+        if (true === property_exists($xml, 'dynamic_templates')) {
+            $this->dynamicTemplates->setXmlConfig($xml->dynamic_templates->children());
+        }
         //init mapping fields
         $this->mapping = new FieldCollection();
         if (true === property_exists($xml, 'mapping')) {
@@ -133,9 +133,9 @@ class Mapping implements MappingImplementor
     /**
      * get collection of dynamic templates
      *
-     * @return DynamicTemplatesCollection
+     * @return DynamicTemplateCollection
      */
-    public function getDynamicTemplates(): DynamicTemplatesCollection
+    public function getDynamicTemplates(): DynamicTemplateCollection
     {
         if (false === $this->isInitialized()) {
             $this->initialize();

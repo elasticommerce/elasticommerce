@@ -99,6 +99,11 @@ class FieldCollection extends DataCollection
                 $instance = new FieldTypeNested();
                 break;
             }
+            case 'date': {
+                $instance = new FieldTypeDate();
+                break;
+            }
+
             default: {
                 throw new \InvalidArgumentException(sprintf('Invalid type class "%s" given', $type));
             }
