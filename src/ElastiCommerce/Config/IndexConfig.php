@@ -62,6 +62,104 @@ abstract class IndexConfig
     protected $schemaConfigFile = null;
 
     /**
+     * @var bool
+     */
+    protected $isInitialized = null;
+
+    /**
+     * @var Config
+     */
+    protected $config = null;
+
+    /**
+     * Snowball languages supported in elasticsearch
+     *
+     * @var array
+     * @link http://www.elasticsearch.org/guide/reference/index-modules/analysis/snowball-tokenfilter.html
+     */
+    protected $supportedLanguages = [
+        'Armenian',
+        'Basque',
+        'Catalan',
+        'Danish',
+        'Dutch',
+        'English',
+        'Finnish',
+        'French',
+        'German',
+        'Hungarian',
+        'Italian',
+        'Kp',
+        'Lovins',
+        'Norwegian',
+        'Porter',
+        'Portuguese',
+        'Romanian',
+        'Russian',
+        'Spanish',
+        'Swedish',
+        'Turkish',
+    ];
+
+    /**
+     * supported language languages codes present by Snowball or default in elasticsearch or lucene
+     *
+     * @var array
+     * @link http://www.elasticsearch.org/guide/reference/index-modules/analysis/snowball-tokenfilter.html
+     */
+    protected $supportedLanguageCodes = [
+        /**
+         * SnowBall filter based
+         */
+        // Danish
+        'da' => 'da_DK',
+        // Dutch
+        'nl' => 'nl_NL',
+        // English
+        'en' => ['en_AU', 'en_CA', 'en_NZ', 'en_GB', 'en_US'],
+        // Finnish
+        'fi' => 'fi_FI',
+        // French
+        'fr' => ['fr_CA', 'fr_FR'],
+        // German
+        'de' => ['de_DE', 'de_DE', 'de_AT'],
+        // Hungarian
+        'hu' => 'hu_HU',
+        // Italian
+        'it' => ['it_IT', 'it_CH'],
+        // Norwegian
+        'nb' => ['nb_NO', 'nn_NO'],
+        // Portuguese
+        'pt' => ['pt_BR', 'pt_PT'],
+        // Romanian
+        'ro' => 'ro_RO',
+        // Russian
+        'ru' => 'ru_RU',
+        // Spanish
+        'es' => ['es_AR', 'es_CL', 'es_CO', 'es_CR', 'es_ES', 'es_MX', 'es_PA', 'es_PE', 'es_VE'],
+        // Swedish
+        'sv' => 'sv_SE',
+        // Turkish
+        'tr' => 'tr_TR',
+
+        /**
+         * Lucene class based
+         */
+        // Czech
+        'cs' => 'cs_CZ',
+        // Greek
+        'el' => 'el_GR',
+        // Thai
+        'th' => 'th_TH',
+        // Chinese
+        'zh' => ['zh_CN', 'zh_HK', 'zh_TW'],
+        // Japanese
+        'ja' => 'ja_JP',
+        // Korean
+        'ko' => 'ko_KR'
+    ];
+
+    /**
      * @return int
      */
     public function getNumberOfShards(): int

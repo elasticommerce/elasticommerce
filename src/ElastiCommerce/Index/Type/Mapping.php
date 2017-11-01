@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index\Type;
 
-use SmartDevs\ElastiCommerce\Implementor\Config;
+use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\DynamicTemplateCollection;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldCollection;
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
@@ -17,9 +17,9 @@ class Mapping implements MappingImplementor
     protected $isInitialized = null;
 
     /**
-     * @var Config
+     * @var IndexConfig
      */
-    protected $config = null;
+    protected $indexConfig = null;
 
     /**
      * list of dynamic templates
@@ -40,9 +40,9 @@ class Mapping implements MappingImplementor
      *
      * @param Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(IndexConfig $indexConfig)
     {
-        $this->config = $config;
+        $this->indexConfig = $indexConfig;
         $this->isInitialized = false;
     }
 
@@ -97,7 +97,7 @@ class Mapping implements MappingImplementor
      */
     protected function readMappingFromConfigFile(): Mapping
     {
-        $configFile = $this->config->getIndexConfig()->getSchemaConfigFile();
+        $configFile = $this->indexConfig->getSchemaConfigFile();
         if (true === $this->isConfigFileReadable($configFile)) {
             $xml = simplexml_load_file($configFile);
         }

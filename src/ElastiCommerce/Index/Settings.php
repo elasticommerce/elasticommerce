@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index;
 
+use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Exception;
-use SmartDevs\ElastiCommerce\Implementor\Config;
 use SmartDevs\ElastiCommerce\Index\Analysis\{
     AnalyzerCollection, CharFilterCollection, TokenFilterCollection, TokenizerCollection
 };
@@ -17,9 +17,9 @@ class Settings
     protected $isInitialized = null;
 
     /**
-     * @var Config
+     * @var IndexConfig
      */
-    protected $config = null;
+    protected $indexConfig = null;
 
     /**
      * Snowball languages supported in elasticsearch
@@ -109,12 +109,24 @@ class Settings
         'ko' => 'ko_KR'
     ];
 
+    /**
+     * @var CharFilterCollection
+     */
     protected $charFilter = null;
 
+    /**
+     * @var TokenizerCollection
+     */
     protected $tokenizer = null;
 
+    /**
+     * @var TokenFilterCollection
+     */
     protected $tokenFilter = null;
 
+    /**
+     * @var AnalyzerCollection
+     */
     protected $analyzer = null;
 
     /**
@@ -122,9 +134,9 @@ class Settings
      *
      * @param Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(IndexConfig $indexConfig)
     {
-        $this->config = $config;
+        $this->indexConfig = $indexConfig;
         $this->isInitialized = false;
     }
 
@@ -157,7 +169,7 @@ class Settings
      */
     protected function initialize(): Settings
     {
-        $this->readMappingFromConfigFile();
+        $this->readAnalyzerFromConfigFile();
         return $this;
     }
 
@@ -180,7 +192,7 @@ class Settings
      */
     protected function readAnalyzerFromConfigFile(): Settings
     {
-        $configFile = $this->config->getIndexConfig()->getAnalyzerConfigFile();
+        $configFile = $this->indexConfig->getAnalyzerConfigFile();
         if (true === $this->isConfigFileReadable($configFile)) {
             $xml = simplexml_load_file($configFile);
         }
@@ -230,7 +242,7 @@ class Settings
      */
     public function getLocaleCode(): string
     {
-        return $this->config->getIndexConfig()->getLocaleCode();
+        return $this->indexConfig->getLocaleCode();
     }
 
     /**
@@ -240,7 +252,7 @@ class Settings
      */
     public function getLanguageCode(): string
     {
-        return $this->config->getIndexConfig()->getLanguageCode();
+        return $this->indexConfig->getLanguageCode();
     }
 
     /**
@@ -250,7 +262,7 @@ class Settings
      */
     public function getLanguage(): string
     {
-        return $this->config->getIndexConfig()->getLanguage();
+        return $this->indexConfig->getLanguage();
     }
 
     /**
@@ -258,7 +270,7 @@ class Settings
      */
     public function getNumberOfShards(): int
     {
-        return $this->config->getIndexConfig()->getNumberOfShards();
+        return $this->indexConfig->getNumberOfShards();
     }
 
     /**
@@ -266,13 +278,13 @@ class Settings
      */
     public function getNumberOfReplicas(): int
     {
-        return $this->config->getIndexConfig()->getNumberOfReplicas();
+        return $this->indexConfig->getNumberOfReplicas();
     }
 
     /**
-     * @return null
+     * @return CharFilterCollection
      */
-    public function getCharFilter()
+    public function getCharFilter(): CharFilterCollection
     {
         if (false === $this->isInitialized()) {
             $this->initialize();
@@ -281,9 +293,9 @@ class Settings
     }
 
     /**
-     * @return null
+     * @return TokenizerCollection
      */
-    public function getTokenizer()
+    public function getTokenizer(): TokenizerCollection
     {
         if (false === $this->isInitialized()) {
             $this->initialize();
@@ -292,9 +304,9 @@ class Settings
     }
 
     /**
-     * @return null
+     * @return TokenFilterCollection
      */
-    public function getTokenFilter()
+    public function getTokenFilter(): TokenFilterCollection
     {
         if (false === $this->isInitialized()) {
             $this->initialize();
@@ -303,9 +315,9 @@ class Settings
     }
 
     /**
-     * @return null
+     * @return AnalyzerCollection
      */
-    public function getAnalyzer()
+    public function getAnalyzer(): AnalyzerCollection
     {
         if (false === $this->isInitialized()) {
             $this->initialize();

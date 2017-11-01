@@ -8,13 +8,13 @@
 
 namespace SmartDevs\ElastiCommerce\Common;
 
-use SmartDevs\ElastiCommerce\Implementor\Config;
+use SmartDevs\ElastiCommerce\Config\ServerConfig;
 
 final class Connection
 {
 
     /**
-     * @var Config
+     * @var ServerConfig
      */
     protected $config = null;
 
@@ -27,9 +27,9 @@ final class Connection
      * Client Connection constructor.
      * @param Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(ServerConfig $serverConfig)
     {
-        $this->config = $config;
+        $this->config = $serverConfig;
     }
 
     /**
@@ -37,16 +37,16 @@ final class Connection
      */
     protected function getConnectDsn()
     {
-        if (true === $this->config->getServerConfig()->isUseAuth()) {
+        if (true === $this->config->isUseAuth()) {
             return sprintf('http://%s:%s@%s:%s',
-                $this->config->getServerConfig()->getHttpBasicAuthUsername(),
-                $this->config->getServerConfig()->getHttpBasicAuthPassword(),
-                $this->config->getServerConfig()->getHost(),
-                $this->config->getServerConfig()->getPort());
+                $this->config->getHttpBasicAuthUsername(),
+                $this->config->getHttpBasicAuthPassword(),
+                $this->config->getHost(),
+                $this->config->getPort());
         } else {
             return sprintf('http://%s:%s',
-                $this->config->getServerConfig()->getHost(),
-                $this->config->getServerConfig()->getPort());
+                $this->config->getHost(),
+                $this->config->getPort());
         }
     }
 

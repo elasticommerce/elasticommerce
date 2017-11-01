@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Facades;
 
-use SmartDevs\ElastiCommerce\Implementor\Facades\IndexFacadeImplementor;
+use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
+use SmartDevs\ElastiCommerce\Index\Settings;
 
-class IndexFacade implements IndexFacadeImplementor
+class IndexFacade
 {
 
     /**
@@ -38,24 +39,19 @@ class IndexFacade implements IndexFacadeImplementor
      * create new index
      *
      * @param string $indexName
-     * @param int $numberOfShards
-     * @param int $numberOfReplicas
+     * @param IndexConfig $indexConfig
      *
      * @return bool
      * @throws \InvalidArgumentException
      * @throws \SmartDevs\ElastiCommerce\Exception
      */
-    public function create(string $indexName, int $numberOfShards, int $numberOfReplicas): bool
+    public function create(
+        string $indexName,
+        Settings $indexSettings
+    ): bool
     {
         if (true === empty($indexName)) {
             throw new \InvalidArgumentException('Parameter $name is empty');
-        }
-        if ($numberOfShards <= 0) {
-            throw new \InvalidArgumentException('Parameter $numberOfShards should be greater then zero.');
-        }
-
-        if ($numberOfReplicas <= 0) {
-            throw new \InvalidArgumentException('Parameter $numberOfReplicas should be greater then zero.');
         }
 
         if ($this->exists($indexName)) {
@@ -66,8 +62,14 @@ class IndexFacade implements IndexFacadeImplementor
             'index' => $indexName,
             'body' => [
                 'settings' => [
-                    'number_of_shards' => $numberOfShards,
-                    'number_of_replicas' => $numberOfReplicas
+                    'number_of_shards' => $indexSettings->getNumberOfShards(),
+                    'number_of_replicas' => $indexSettings->getNumberOfReplicas(),
+                    'analysis' => [
+                        'analyzer' => $indexSettings->getAnalyzer()->toSchema(),
+                        'char_filter' => $indexSettings->getCharFilter()->toSchema(),
+                        'filter' => $indexSettings->getTokenFilter()->toSchema(),
+                        'tokenizer' => $indexSettings->getTokenizer()->toSchema()
+                    ]
                 ]
             ]
         ];
@@ -283,6 +285,26 @@ class IndexFacade implements IndexFacadeImplementor
         return false;
     }
 
+    public function setAnalysis(string $indexName, array $analyzer, array $charfilter, array $tokenfilter, array $tokenizer): bool
+    {
+        if (false === $this->exists($indexName)) {
+            throw new \SmartDevs\ElastiCommerce\Exception(sprintf('Index "%s" doesn\'t exists', $indexName));
+        }
+        $result = $this->indicesNamespace->putSettings(
+            ['index' => $indexName,
+                'body' => ['settings' =>
+                    ['analysis' => [
+                        'analyzer' => $analyzer,
+                        'char_filter' => $charfilter,
+                        'filter' => $tokenfilter,
+                        'tokenizer' => $tokenizer
+                    ]
+                    ]
+                ]
+            ]
+        );
+        return $result['acknowledged'] === true ? true : false;
+    }
 
     /**
      * @param string $aliasName

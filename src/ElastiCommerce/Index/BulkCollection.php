@@ -3,20 +3,20 @@ declare(strict_types = 1);
 
 namespace SmartDevs\ElastiCommerce\Index;
 
-use SmartDevs\ElastiCommerce\Implementor\Config;
+use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Util\Data\DataCollection;
 
 class BulkCollection extends DataCollection
 {
     /**
-     * @var Config
+     * @var IndexConfig
      */
-    protected $config = null;
+    protected $indexConfig = null;
 
-    public function __construct(Config $config)
+    public function __construct(IndexConfig $indexConfig)
     {
         $this->setItemObjectClass('\SmartDevs\ElastiCommerce\Index\Document');
-        $this->config = $config;
+        $this->indexConfig = $indexConfig;
     }
 
 }

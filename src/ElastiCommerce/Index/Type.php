@@ -55,6 +55,7 @@ class Type extends DataObject implements TypeImplementor
     public function setMapping(MappingImplementor $mapping): TypeImplementor
     {
         $this->mapping = $mapping;
+        return $this;
     }
 
     /**
