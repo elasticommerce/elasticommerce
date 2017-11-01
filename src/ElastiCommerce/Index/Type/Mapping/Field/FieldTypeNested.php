@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields;
+namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Field;
 
 
 final class FieldTypeNested extends FieldTypeBase

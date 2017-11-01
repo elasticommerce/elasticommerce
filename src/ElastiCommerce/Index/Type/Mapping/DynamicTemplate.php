@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SmartDevs\ElastiCommerce\Index\Type\Mapping;
 
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\{
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\{
     FieldTypeBase, FieldTypeDate, FieldTypeNested, FieldTypeNumeric, FieldTypeString
 };
 use SmartDevs\ElastiCommerce\Util\Data\DataObject;

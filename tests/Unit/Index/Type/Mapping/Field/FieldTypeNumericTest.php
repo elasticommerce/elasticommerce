@@ -2,7 +2,7 @@
 #declare(strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\FieldTypeNumeric;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeNumeric;
 
 class FieldTypeNumericTest extends TestCase
 {

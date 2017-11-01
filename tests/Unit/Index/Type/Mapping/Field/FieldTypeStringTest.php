@@ -2,7 +2,7 @@
 #declare(strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\FieldTypeString;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeString;
 
 class FieldTypeStringTest extends TestCase
 {

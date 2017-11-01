@@ -5,7 +5,7 @@ namespace SmartDevs\ElastiCommerce\Index\Type;
 
 use SmartDevs\ElastiCommerce\Implementor\Config;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\DynamicTemplateCollection;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Fields\FieldCollection;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldCollection;
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 
 class Mapping implements MappingImplementor
