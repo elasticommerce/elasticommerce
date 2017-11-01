@@ -28,13 +28,6 @@ abstract class AbstractCollection extends DataCollection
     }
 
     /**
-     * AbstractCollection constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * init collection from xml config
      *
      * @param \SimpleXMLElement $element
