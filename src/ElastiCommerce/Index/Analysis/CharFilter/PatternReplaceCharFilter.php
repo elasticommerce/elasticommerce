@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\CharFilter;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-pattern-replace-charfilter.html
  *
  * Class PatternReplaceCharFilter
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\CharFilter
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\CharFilter
  */
 class PatternReplaceCharFilter extends AbstractCharFilter
 {
@@ -17,18 +19,18 @@ class PatternReplaceCharFilter extends AbstractCharFilter
     /**
      * add char filter type data
      *
-     * @param   \SimpleXMLElement $element
+     * @param   \SimpleXMLElement $xml
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\CharFilter\PatternReplaceCharFilter
+     * @return  AbstractCharFilter
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $xml): AbstractCharFilter
     {
         //check we have data
-        if (true === property_exists($element, 'pattern')) {
-            throw new \Exception('needs to be implemented');
+        if (true === property_exists($xml, 'pattern')) {
+            throw new \InvalidArgumentException('needs to be implemented');
         }
-        if (true === property_exists($element, 'replacement')) {
-            throw new \Exception('needs to be implemented');
+        if (true === property_exists($xml, 'replacement')) {
+            throw new \InvalidArgumentException('needs to be implemented');
         }
         return $this;
     }

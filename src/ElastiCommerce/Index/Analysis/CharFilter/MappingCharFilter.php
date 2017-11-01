@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\CharFilter;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-mapping-charfilter.html
  *
  * Class MappingCharFilter
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\CharFilter
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\CharFilter
  */
 class MappingCharFilter extends AbstractCharFilter
 {
@@ -17,15 +19,15 @@ class MappingCharFilter extends AbstractCharFilter
     /**
      * add char filter type data
      *
-     * @param   \SimpleXMLElement $element
+     * @param   \SimpleXMLElement $xml
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\CharFilter\MappingCharFilter
+     * @return  AbstractCharFilter
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $xml): AbstractCharFilter
     {
         //check we have data
-        if (true === property_exists($element, 'mappings')) {
-            throw new \Exception('needs to be implemented');
+        if (true === property_exists($xml, 'mappings')) {
+            throw new \InvalidArgumentException('needs to be implemented');
         }
         return $this;
     }
