@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html
  *
  * Class StandardTokenizer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Tokenizer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer
  */
 class StandardTokenizer extends AbstractTokenizer
 {
@@ -15,13 +17,13 @@ class StandardTokenizer extends AbstractTokenizer
     const TYPE = 'standard';
 
     /**
-     * add tokenizer type data
+     * add Tokenizer type data
      *
      * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer\StandardTokenizer
+     * @return  AbstractTokenizer
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenizer
     {
         if (true === property_exists($element, 'max_token_length')) {
             if ((int)$element->max_token_length == 0) {

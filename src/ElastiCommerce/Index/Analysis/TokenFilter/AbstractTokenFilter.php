@@ -1,8 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter;
-use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
 
+use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
+/**
+ * Class AbstractTokenFilter
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter
+ */
 abstract class AbstractTokenFilter extends DataObject
 {
     public function __construct()
@@ -16,14 +22,16 @@ abstract class AbstractTokenFilter extends DataObject
      * add Token Filter type data
      * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter\AbstractTokenFilter
+     * @return  AbstractTokenFilter
      */
-    abstract public function setXmlConfig(\SimpleXMLElement $element);
+    abstract public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenFilter;
 
     /**
-     * get current object as array
+     * get current token filter as array
+     *
+     * @return array
      */
-    public function toSchema()
+    public function toSchema(): array
     {
         $data = $this->getData();
         unset($data['name']);

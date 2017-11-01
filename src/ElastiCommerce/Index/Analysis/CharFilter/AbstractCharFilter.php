@@ -20,10 +20,11 @@ abstract class AbstractCharFilter extends DataObject
 
     /**
      * add char filter type data
-     * @param \SimpleXMLElement $xml
+     *
+     * @param \SimpleXMLElement $element
      * @return AbstractCharFilter
      */
-    abstract public function setXmlConfig(\SimpleXMLElement $xml): AbstractCharFilter;
+    abstract public function setXmlConfig(\SimpleXMLElement $element): AbstractCharFilter;
 
     /**
      * get current object as array

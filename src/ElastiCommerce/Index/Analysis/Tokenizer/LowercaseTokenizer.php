@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lowercase-tokenizer.html
  *
  * Class LowercaseTokenizer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Tokenizer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer
  */
 class LowercaseTokenizer extends AbstractTokenizer
 {
@@ -15,13 +17,13 @@ class LowercaseTokenizer extends AbstractTokenizer
     const TYPE = 'lowercase';
 
     /**
-     * add tokenizer type data
+     * add Tokenizer type data
      *
      * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer\LowercaseTokenizer
+     * @return  AbstractTokenizer
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenizer
     {
         return $this;
     }

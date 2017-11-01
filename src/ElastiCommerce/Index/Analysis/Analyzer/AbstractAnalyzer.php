@@ -31,9 +31,10 @@ abstract class AbstractAnalyzer extends DataObject
     /**
      * checks a property is valid
      *
+     * @param string $property
      * @return bool
      */
-    protected function isPropertyValid($property): bool
+    protected function isPropertyValid(string $property): bool
     {
         return in_array($property, $this->validProperties);
     }
@@ -57,26 +58,26 @@ abstract class AbstractAnalyzer extends DataObject
     /**
      * init object from xml config
      *
-     * @param \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $element
      * @return AbstractAnalyzer
      */
-    public function setXmlConfig(\SimpleXMLElement $xml): AbstractAnalyzer
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractAnalyzer
     {
         foreach ($this->validProperties as $property) {
             //skip check we have an non existent or empty property
-            if (false === isset($xml->{$property}) || true === empty($xml->{$property})) {
+            if (false === isset($element->{$property}) || true === empty($element->{$property})) {
                 continue;
             }
-            if (count($xml->{$property}->children()) > 0) {
+            if (count($element->{$property}->children()) > 0) {
                 $this->setDataUsingMethod($property,
                     array_values(
                         array_map(function ($item) {
                             return false === empty(strval($item)) ? strval($item) : strval($item->getName());
-                        }, (array)$xml->{$property}->children())
+                        }, (array)$element->{$property}->children())
                     )
                 );
             } else {
-                $this->setDataUsingMethod($property, strval($xml->{$property}));
+                $this->setDataUsingMethod($property, strval($element->{$property}));
             }
         }
         return $this;

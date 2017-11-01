@@ -7,7 +7,7 @@ namespace SmartDevs\ElastiCommerce\Index\Analysis\Analyzer;
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-analyzer.html
  *
  * Class StandardAnalyzer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Analyzer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Analyzer
  */
 final class StandardAnalyzer extends AbstractAnalyzer
 {

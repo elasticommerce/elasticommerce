@@ -1,6 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer;
-use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
+
+use SmartDevs\ElastiCommerce\Util\Data\DataObject;
+
+/**
+ * Class AbstractTokenizer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer
+ */
 abstract class AbstractTokenizer extends DataObject
 {
     public function __construct()
@@ -11,14 +19,20 @@ abstract class AbstractTokenizer extends DataObject
     }
 
     /**
-     * add tokenizer type data
+     * add Tokenizer type data
+     *
+     * @param   \SimpleXMLElement $element
+     * @throws  \InvalidArgumentException
+     * @return  AbstractTokenizer
      */
-    abstract public function setXmlConfig(\SimpleXMLElement $element);
+    abstract public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenizer;
 
     /**
-     * get current object as array
+     * get current tokenizer as array
+     *
+     * @return array
      */
-    public function toSchema()
+    public function toSchema(): array
     {
         $data = $this->getData();
         unset($data['name']);

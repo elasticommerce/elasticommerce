@@ -19,14 +19,14 @@ class MappingCharFilter extends AbstractCharFilter
     /**
      * add char filter type data
      *
-     * @param   \SimpleXMLElement $xml
+     * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
      * @return  AbstractCharFilter
      */
-    public function setXmlConfig(\SimpleXMLElement $xml): AbstractCharFilter
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractCharFilter
     {
         //check we have data
-        if (true === property_exists($xml, 'mappings')) {
+        if (true === property_exists($element, 'mappings')) {
             throw new \InvalidArgumentException('needs to be implemented');
         }
         return $this;

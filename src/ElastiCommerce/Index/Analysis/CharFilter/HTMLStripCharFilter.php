@@ -19,19 +19,19 @@ class HTMLStripCharFilter extends AbstractCharFilter
     /**
      * add char filter type data
      *
-     * @param   \SimpleXMLElement $xml
+     * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
      * @return  AbstractCharFilter
      */
-    public function setXmlConfig(\SimpleXMLElement $xml): AbstractCharFilter
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractCharFilter
     {
         //check we have data
-        if (true === property_exists($xml, 'escaped_tags') && count($xml->escaped_tags->children()) > 0) {
+        if (true === property_exists($element, 'escaped_tags') && count($element->escaped_tags->children()) > 0) {
             $this->setDataUsingMethod('escaped_tags',
                 array_values(
                     array_map(
                         'strval',
-                        (array)$xml->escaped_tags->children()
+                        (array)$element->escaped_tags->children()
                     )
                 )
             );

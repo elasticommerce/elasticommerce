@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-pathhierarchy-tokenizer.html#analysis-pathhierarchy-tokenizer
  *
- * Class WhitespaceTokenizer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Tokenizer
+ * Class PathHierarchyTokenizer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer
  */
 class PathHierarchyTokenizer extends AbstractTokenizer
 {
@@ -15,13 +17,13 @@ class PathHierarchyTokenizer extends AbstractTokenizer
     const TYPE = 'path_hierarchy';
 
     /**
-     * add tokenizer type data
+     * add Tokenizer type data
      *
      * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\Tokenizer\WhitespaceTokenizer
+     * @return  AbstractTokenizer
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenizer
     {
         return $this;
     }

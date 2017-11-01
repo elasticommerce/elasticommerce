@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter;
 
 /**
- * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenfilter.html
+ * @link https://github.com/jprante/elasticsearch-analysis-decompound
  *
- * Class StandardTokenFilter
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\TokenFilter
+ * Class DecompoundTokenFilter
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter
  */
 class DecompoundTokenFilter extends AbstractTokenFilter
 {
@@ -19,9 +21,9 @@ class DecompoundTokenFilter extends AbstractTokenFilter
      *
      * @param   \SimpleXMLElement $element
      * @throws  \InvalidArgumentException
-     * @return  \SmartDevs\ElastiCommerce\Index\Analysis\TokenFilter\StandardTokenFilter
+     * @return  AbstractTokenFilter
      */
-    public function setXmlConfig(\SimpleXMLElement $element)
+    public function setXmlConfig(\SimpleXMLElement $element): AbstractTokenFilter
     {
         return $this;
     }
