@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Analyzer;
 
 /**
  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-custom-analyzer.html
  *
  * Class CustomAnalyzer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Analyzer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Analyzer
  */
 final class CustomAnalyzer extends AbstractAnalyzer
 {
@@ -30,8 +32,9 @@ final class CustomAnalyzer extends AbstractAnalyzer
      * set char filter
      *
      * @param array $charFilter
+     * @return AbstractAnalyzer
      */
-    protected function setCharFilter(array $charFilter)
+    protected function setCharFilter(array $charFilter): AbstractAnalyzer
     {
         $this->_data['char_filter'] = array_map(function ($filterName) {
             return (string)$filterName;
@@ -43,8 +46,9 @@ final class CustomAnalyzer extends AbstractAnalyzer
      * set filter
      *
      * @param array $filter
+     * @return AbstractAnalyzer
      */
-    protected function setFilter(array $filter)
+    protected function setFilter(array $filter): AbstractAnalyzer
     {
         $this->_data['filter'] = array_map(function ($filterName) {
             return (string)$filterName;
@@ -55,10 +59,12 @@ final class CustomAnalyzer extends AbstractAnalyzer
     /**
      * set position increment gap
      *
-     * @param $value
+     * @param int $value
+     * @return AbstractAnalyzer
      */
-    protected function setPositionIncrementGap($value)
+    protected function setPositionIncrementGap($value): AbstractAnalyzer
     {
         $this->_data['position_increment_gap'] = (int)$value;
+        return $this;
     }
 }

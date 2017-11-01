@@ -1,9 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace SmartDevs\ElastiCommerce\Index\Analysis\Analyzer;
-use SmartDevs\ElastiCommerce\Util\Data\{DataObject,DataCollection};
+
+use SmartDevs\ElastiCommerce\Util\Data\DataObject;
+
 /**
  * Class AbstractAnalyzer
- * @package SmartDevs\ElastiCommerce\Components\Index\Analysis\Analyzer
+ * @package SmartDevs\ElastiCommerce\Index\Analysis\Analyzer
  */
 abstract class AbstractAnalyzer extends DataObject
 {
@@ -26,6 +30,8 @@ abstract class AbstractAnalyzer extends DataObject
 
     /**
      * checks a property is valid
+     *
+     * @return bool
      */
     protected function isPropertyValid($property): bool
     {
@@ -52,9 +58,9 @@ abstract class AbstractAnalyzer extends DataObject
      * init object from xml config
      *
      * @param \SimpleXMLElement $xml
-     * @return $this
+     * @return AbstractAnalyzer
      */
-    public function setXmlConfig(\SimpleXMLElement $xml)
+    public function setXmlConfig(\SimpleXMLElement $xml): AbstractAnalyzer
     {
         foreach ($this->validProperties as $property) {
             //skip check we have an non existent or empty property
@@ -78,8 +84,10 @@ abstract class AbstractAnalyzer extends DataObject
 
     /**
      * get current object as array
+     *
+     * @return array
      */
-    public function toSchema()
+    public function toSchema(): array
     {
         $data = $this->getData();
         unset($data['name']);
