@@ -22,6 +22,7 @@ final class CustomAnalyzer extends AbstractAnalyzer
     protected $validProperties = [
         'char_filter',
         'filter',
+        'tokenizer',
         'position_increment_gap'
     ];
 
