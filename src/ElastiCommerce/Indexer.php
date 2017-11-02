@@ -249,7 +249,6 @@ class Indexer
         $type->setName($name);
         $type->setMapping(new Mapping($this->getIndexConfig()));
         $this->getIndexTypes()->addType($type);
-        $type->getMapping()->getDynamicTemplates()->toSchema();
         return $this;
     }
 
