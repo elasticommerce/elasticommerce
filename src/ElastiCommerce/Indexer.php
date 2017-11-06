@@ -226,6 +226,7 @@ class Indexer
         });
 
         $this->getConnection()->bulk(['body' => $params]);
+        $this->getBulk()->clear();
     }
 
     /**
