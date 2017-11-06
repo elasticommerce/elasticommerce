@@ -217,6 +217,17 @@ class Indexer
         return $this->bulkCollection;
     }
 
+    public function sendBulk()
+    {
+        $params = [];
+        $indexName = $this->getIndexName();
+        $this->getBulk()->walk(function ($item) use (&$params, $indexName) {
+            $params = array_merge($params, $item->getBulkArray($indexName));
+        });
+
+        $this->getConnection()->bulk(['body' => $params]);
+    }
+
     /**
      * get current index name
      *
@@ -252,12 +263,22 @@ class Indexer
         return $this;
     }
 
+    public function getTypeMapping(string $typeName)
+    {
+        return $this->getIndexTypes()->getItemById($typeName);
+    }
+
     /**
      * create new index
      */
     public function createIndex()
     {
-        $this->getIndex()->create($this->getIndexName(), $this->getIndexSettings());
+        $indexType = $this->getIndexTypes()->getFirstItem();
+        $this->getIndex()->create($this->getIndexName(), $this->getIndexSettings(), $indexType->getMapping()->getDynamicTemplates()->toSchema());
+        foreach ($this->getIndexTypes() as $indexType) {
+            $this->getIndex()->setMapping($this->getIndexName(), $indexType->getName(), $indexType->getMapping());
+        }
+        #$this->getIndex()->setMapping($this->getIndexName())
     }
 
     /**

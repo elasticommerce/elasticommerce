@@ -47,7 +47,8 @@ class IndexFacade
      */
     public function create(
         string $indexName,
-        Settings $indexSettings
+        Settings $indexSettings,
+        array $dynamicTemplates = []
     ): bool
     {
         if (true === empty($indexName)) {
@@ -277,11 +278,38 @@ class IndexFacade
         return $result['acknowledged'] === true ? true : false;
     }
 
-    public function setMapping(string $indexName, MappingImplementor $mapping): bool
+    public function setMapping(string $indexName, string $indexType, MappingImplementor $mapping): bool
     {
         if (false === $this->exists($indexName)) {
             throw new \SmartDevs\ElastiCommerce\Exception(sprintf('Index "%s" doesn\'t exists', $indexName));
         }
+        $this->indicesNamespace->putMapping([
+            'index' => $indexName,
+            'type' => $indexType,
+            'body' => [
+                $indexType => [
+                    '_source' => [
+                        'enabled' => true
+                    ],
+                    '_all' => [
+                        'enabled' => true
+                    ],
+                    'dynamic_templates' => $mapping->getDynamicTemplates()->toSchema(),
+                    'properties' => $mapping->getMapping()->toSchema()
+                ]
+            ]
+        ]);
+#        $this->indicesNamespace->putTemplate([
+#            'name' => 'elasticommerce',
+#            'body' => [
+#                "template" => "elasticommerce-*",
+#                'mappings' => [
+#                    $indexType => [
+#                        'dynamic_templates' => $mapping->getDynamicTemplates()->toSchema()
+#                    ]
+#                ]
+#            ]
+#        ]);
         return false;
     }
 

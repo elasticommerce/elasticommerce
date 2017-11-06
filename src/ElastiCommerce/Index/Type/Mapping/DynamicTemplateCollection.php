@@ -62,7 +62,7 @@ class DynamicTemplateCollection extends DataCollection
         $return = array();
         foreach ($this->getItems() as $dynamicTemplate) {
             /** @var $dynamicTemplate DynamicTemplate */
-            $return[$dynamicTemplate->getName()] = $dynamicTemplate->toSchema();
+            $return[][$dynamicTemplate->getName()] = $dynamicTemplate->toSchema();
         }
         return $return;
     }

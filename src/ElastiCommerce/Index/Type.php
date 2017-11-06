@@ -68,6 +68,11 @@ class Type extends DataObject implements TypeImplementor
         return $this->mapping;
     }
 
+    public function getMappingFields()
+    {
+        return $this->mapping->getFields();
+    }
+
     /**
      * checks type has valid mapping
      *

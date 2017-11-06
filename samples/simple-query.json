@@ -1,0 +1,61 @@
+{
+  "_source": {
+    "includes": [
+      "result.color*",
+      "result.description",
+      "result.name",
+      "sort-string.name"
+    ]
+  },
+  "sort": [
+    {
+      "sort-string.name": {
+        "order": "asc"
+      },
+      "sort-numeric.price": {
+        "order": "asc"
+      }
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted^7",
+              "search.fulltext^2"
+            ],
+            "operator": "AND",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular"
+          }
+        }
+      ],
+      "should": [
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-stem^7",
+              "search.fulltext.no-stem^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular"
+          }
+        },
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-decompound^7",
+              "search.fulltext.no-decompound^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -140,4 +140,13 @@ abstract class FieldTypeBase extends DataObject
     {
         return $this->getId();
     }
+
+    public function setCopyTo($field)
+    {
+        if (false === isset($this->_data['copy_to'])) {
+            $this->_data['copy_to'] = [];
+        }
+        $this->_data['copy_to'][] = $field;
+        return $this;
+    }
 }

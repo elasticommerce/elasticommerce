@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace SmartDevs\ElastiCommerce\Index\Type;
 
 use SmartDevs\ElastiCommerce\Config\IndexConfig;
+use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\DynamicTemplateCollection;
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldCollection;
-use SmartDevs\ElastiCommerce\Implementor\Index\Type\MappingImplementor;
 
 class Mapping implements MappingImplementor
 {
@@ -52,9 +52,10 @@ class Mapping implements MappingImplementor
      * @param bool $value
      * @return Mapping
      */
-    protected function setIsInitialized(bool $flag): Mappings
+    protected function setIsInitialized(bool $flag): Mapping
     {
         $this->isInitialized = $flag;
+        return $this;
     }
 
     /**
@@ -75,6 +76,7 @@ class Mapping implements MappingImplementor
     protected function initialize(): Mapping
     {
         $this->readMappingFromConfigFile();
+        $this->setIsInitialized(true);
         return $this;
     }
 
@@ -141,6 +143,14 @@ class Mapping implements MappingImplementor
             $this->initialize();
         }
         return $this->dynamicTemplates;
+    }
+
+    public function getFields(): FieldCollection
+    {
+        if (false === $this->isInitialized()) {
+            $this->initialize();
+        }
+        return $this->mapping;
     }
 
     /**

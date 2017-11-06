@@ -103,7 +103,10 @@ class FieldCollection extends DataCollection
                 $instance = new FieldTypeDate();
                 break;
             }
-
+            case 'completion':{
+                $instance = new FieldTypeCompletion();
+                break;
+            }
             default: {
                 throw new \InvalidArgumentException(sprintf('Invalid type class "%s" given', $type));
             }

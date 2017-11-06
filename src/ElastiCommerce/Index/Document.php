@@ -130,13 +130,14 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function getBulkArray(string $index)
     {
-        return [
-            'index' => [
-                'index' => $index,
-                'type' => $this->docType,
-                '_id' => $this->docId,
-                'body' => $this->data
-            ]
+        $return = array();
+        $return[] = ['index' => [
+            '_index' => $index,
+            '_type' => $this->docType,
+            '_id' => $this->docId,
+        ]
         ];
+        $return[] = $this->_data;
+        return $return;
     }
 }
