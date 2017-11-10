@@ -63,6 +63,7 @@ class IndexFacade
             'index' => $indexName,
             'body' => [
                 'settings' => [
+                    'refresh_interval' => "10s",
                     'number_of_shards' => $indexSettings->getNumberOfShards(),
                     'number_of_replicas' => $indexSettings->getNumberOfReplicas(),
                     'analysis' => [
