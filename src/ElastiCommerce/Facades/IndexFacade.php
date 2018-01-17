@@ -293,7 +293,7 @@ class IndexFacade
                         'enabled' => true
                     ],
                     '_all' => [
-                        'enabled' => true
+                        'enabled' => false
                     ],
                     'dynamic_templates' => $mapping->getDynamicTemplates()->toSchema(),
                     'properties' => $mapping->getMapping()->toSchema()

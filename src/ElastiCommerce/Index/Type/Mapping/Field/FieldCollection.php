@@ -82,8 +82,8 @@ class FieldCollection extends DataCollection
     protected function getTypeInstance($type)
     {
         switch ($type) {
-            case 'string': {
-                $instance = new FieldTypeString();
+            case 'text': {
+                $instance = new FieldTypeText();
                 break;
             }
             case 'long':

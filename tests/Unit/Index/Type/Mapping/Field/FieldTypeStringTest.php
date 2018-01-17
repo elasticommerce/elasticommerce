@@ -2,13 +2,13 @@
 #declare(strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeString;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeText;
 
 class FieldTypeStringTest extends TestCase
 {
 
     /**
-     * @var FieldTypeString
+     * @var FieldTypeText
      */
     protected $fieldType;
 
@@ -17,7 +17,7 @@ class FieldTypeStringTest extends TestCase
      */
     protected function setUp()
     {
-        $this->fieldType = new FieldTypeString();
+        $this->fieldType = new FieldTypeText();
     }
 
     protected function tearDown()

@@ -21,6 +21,26 @@
     "bool": {
       "must": [
         {
+          "nested": {
+            "path": "filter-string",
+            "query": {
+              "term": {
+                "filter-string.es_color": "233"
+              }
+            }
+          }
+        },
+        {
+          "nested": {
+            "path": "filter-string",
+            "query": {
+              "term": {
+                "filter-string.gender": "93"
+              }
+            }
+          }
+        },
+        {
           "multi_match": {
             "fields": [
               "search.fulltext_boosted^7",

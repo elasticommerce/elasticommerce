@@ -4,7 +4,7 @@ namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Field;
 
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\Mapping\Field\FieldTypeImplementor;
 
-final class FieldTypeString extends FieldTypeBase implements FieldTypeImplementor
+final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
 {
     /**
      * valid parameters for generating mapping schema
@@ -28,19 +28,19 @@ final class FieldTypeString extends FieldTypeBase implements FieldTypeImplemento
      *
      * @var string[]
      */
-    protected $validTypes = ['string'];
+    protected $validTypes = ['text'];
 
     /**
      * fields collection
      *
-     * @var TypeStringFieldCollection
+     * @var TypeTextFieldCollection
      */
     protected $fields = null;
 
     public function setXmlConfig(\SimpleXMLElement $xml)
     {
         if (true === isset($xml->fields) && true === $this->hasValueChildren($xml->fields)) {
-            $this->fields = new FieldTypeStringFieldCollection();
+            $this->fields = new FieldTypeTextFieldCollection();
             $this->fields->setXmlConfig($xml->fields);
             unset($xml->fields);
             //add fields
@@ -77,7 +77,7 @@ final class FieldTypeString extends FieldTypeBase implements FieldTypeImplemento
     public function toSchema()
     {
         $return = parent::toSchema();
-        if ($this->fields instanceof FieldTypeStringFieldCollection && $this->fields->count() > 0) {
+        if ($this->fields instanceof FieldTypeTextFieldCollection && $this->fields->count() > 0) {
             $return['fields'] = $this->fields->toSchema();
         }
         return $return;

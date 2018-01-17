@@ -1,7 +1,7 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Field;
 
-final class FieldTypeStringFieldCollection extends FieldCollection
+final class FieldTypeTextFieldCollection extends FieldCollection
 {
 
     /**
@@ -14,8 +14,8 @@ final class FieldTypeStringFieldCollection extends FieldCollection
     protected function getTypeInstance($type)
     {
         switch ($type) {
-            case 'string': {
-                $instance = new FieldTypeString();
+            case 'text': {
+                $instance = new FieldTypeText();
                 break;
             }
             default: {
