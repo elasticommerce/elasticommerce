@@ -74,7 +74,7 @@ class FieldTypeStringTest extends TestCase
     public function setTypeValidDataProvider()
     {
         return [
-            ['string']
+            ['text']
         ];
     }
 
@@ -89,7 +89,7 @@ class FieldTypeStringTest extends TestCase
     public function testInitFromXml()
     {
         $xml = new \SimpleXMLElement('
-            <test type="string"><index>no</index><store>false</store></test>
+            <test type="text"><index>no</index><store>false</store></test>
             ');
         $this->fieldType->setXmlConfig($xml);
         $this->assertStringMatchesFormat('no', $this->fieldType->getIndex());
@@ -99,12 +99,12 @@ class FieldTypeStringTest extends TestCase
     public function testInitFromXmlWithFields()
     {
         $xml = new \SimpleXMLElement('
-            <test type="string">
+            <test type="text">
                             <fields>
-                    <no-decompound type="string">
+                    <no-decompound type="text">
                         <analyzer>full_text_search_analyzer_no_decompound</analyzer>
                     </no-decompound>
-                    <no-stem type="string">
+                    <no-stem type="text">
                         <analyzer>default</analyzer>
                     </no-stem>
                 </fields>
@@ -113,10 +113,10 @@ class FieldTypeStringTest extends TestCase
         $this->fieldType->setXmlConfig($xml);
         $fields = $this->fieldType->getFields();
         $this->assertCount(2, $fields);
-        $this->assertEquals('string',$fields->getField('no-decompound')->getType());
+        $this->assertEquals('text',$fields->getField('no-decompound')->getType());
         $this->assertEquals('no-decompound',$fields->getField('no-decompound')->getName());
         $this->assertEquals('full_text_search_analyzer_no_decompound',$fields->getField('no-decompound')->getAnalyzer());
-        $this->assertEquals('string',$fields->getField('no-stem')->getType());
+        $this->assertEquals('text',$fields->getField('no-stem')->getType());
         $this->assertEquals('no-stem',$fields->getField('no-stem')->getName());
         $this->assertEquals('default',$fields->getField('no-stem')->getAnalyzer());
 
