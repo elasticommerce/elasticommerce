@@ -1,0 +1,139 @@
+{
+  "_source": {
+    "includes": [
+      "result.*"
+    ]
+  },
+  "sort": [
+    {
+      "sort-string.name": {
+        "order": "asc"
+      }
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "nested": {
+            "path": "filter-numeric",
+            "score_mode": "none",
+            "query": {
+              "bool": {
+                "filter": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "filter-numeric.name": "color"
+                          }
+                        },
+                        {
+                          "terms": {
+                            "filter-numeric.filter": [
+                              "15"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "nested": {
+            "path": "filter-numeric",
+            "score_mode": "none",
+            "query": {
+              "bool": {
+                "filter": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "filter-numeric.name": "gender"
+                          }
+                        },
+                        {
+                          "terms": {
+                            "filter-numeric.filter": [
+                              "93",
+                              "94",
+                              "22"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted^7",
+              "search.fulltext^2"
+            ],
+            "operator": "AND",
+            "type": "cross_fields",
+            "query": "Sunglasses Male"
+          }
+        }
+      ],
+      "should": [
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-stem^7",
+              "search.fulltext.no-stem^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular"
+          }
+        },
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-decompound^7",
+              "search.fulltext.no-decompound^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Sunglasses Male"
+          }
+        }
+      ]
+    }
+  },
+  "aggregations": {
+    "agg_numeric": {
+      "nested": {
+        "path": "filter-numeric"
+      },
+      "aggs": {
+        "facet_name": {
+          "terms": {
+            "field": "filter-numeric.name",
+            "exclude" : ["anchors", "categories","status", "visibility"]
+          },
+          "aggs": {
+            "facet_value": {
+              "terms": {
+                "field": "filter-numeric.filter"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

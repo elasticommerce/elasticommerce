@@ -15,26 +15,6 @@
     "bool": {
       "must": [
         {
-          "nested": {
-            "path": "filter-numeric",
-            "query": {
-              "term": {
-                "color": "15"
-              }
-            }
-          }
-        },
-        {
-          "nested": {
-            "path": "filter-numeric",
-            "query": {
-              "term": {
-                "gender": "93"
-              }
-            }
-          }
-        },
-        {
           "multi_match": {
             "fields": [
               "search.fulltext_boosted^7",
@@ -42,7 +22,7 @@
             ],
             "operator": "AND",
             "type": "cross_fields",
-            "query": "Shirt Male Regular"
+            "query": "Sunglasses"
           }
         }
       ],
@@ -66,10 +46,32 @@
             ],
             "operator": "OR",
             "type": "cross_fields",
-            "query": "Shirt Male Regular"
+            "query": "Sunglasses"
           }
         }
       ]
+    }
+  },
+  "aggregations": {
+    "agg_numeric": {
+      "nested": {
+        "path": "filter-numeric"
+      },
+      "aggs": {
+        "facet_name": {
+          "terms": {
+            "field": "filter-numeric.name",
+            "exclude" : ["anchors", "categories","status", "visibility"]
+          },
+          "aggs": {
+            "facet_value": {
+              "terms": {
+                "field": "filter-numeric.filter"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

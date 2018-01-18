@@ -1,0 +1,48 @@
+{
+  "_source": {
+    "includes": [
+      "result.color*",
+      "result.description",
+      "result.name",
+      "sort-string.name"
+    ]
+  },
+  "sort": [
+    {
+      "sort-string.name": {
+        "order": "asc"
+      },
+      "sort-numeric.price": {
+        "order": "asc"
+      }
+    }
+  ],
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-stem^7",
+              "search.fulltext.no-stem^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular Silver"
+          }
+        },
+        {
+          "multi_match": {
+            "fields": [
+              "search.fulltext_boosted.no-decompound^7",
+              "search.fulltext.no-decompound^2"
+            ],
+            "operator": "OR",
+            "type": "cross_fields",
+            "query": "Shirt Male Regular Silver"
+          }
+        }
+      ]
+    }
+  }
+}

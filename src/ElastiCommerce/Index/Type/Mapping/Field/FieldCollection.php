@@ -86,6 +86,10 @@ class FieldCollection extends DataCollection
                 $instance = new FieldTypeText();
                 break;
             }
+            case 'keyword': {
+                $instance = new FieldTypeKeyword();
+                break;
+            }
             case 'long':
             case 'integer':
             case 'short':

@@ -66,7 +66,8 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
             self::SORT_DATE => [],
             self::FILTER_STRING => [],
             self::FILTER_NUMBER => [],
-            self::FILTER_DATE => []
+            self::FILTER_DATE => [],
+            self::FILTER_STATUS => []
         ];
     }
 
@@ -117,9 +118,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      * @param $key
      * @param $value
      */
-    public function addFilter($key, $value, $type = self::FILTER_STRING)
+    public function addFilter($name, $value, $type = self::FILTER_STRING, $facette = null)
     {
-        $this->_data[$type][$key] = $value;
+        $this->_data[$type][] = ['name' => $name, 'filter' => $value, 'facette' => empty($facette) ? $value : $facette];
     }
 
     /**
