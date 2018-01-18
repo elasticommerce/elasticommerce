@@ -66,8 +66,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
             self::SORT_DATE => [],
             self::FILTER_STRING => [],
             self::FILTER_NUMBER => [],
-            self::FILTER_DATE => [],
-            self::FILTER_STATUS => []
+            self::FILTER_DATE => []
         ];
     }
 
