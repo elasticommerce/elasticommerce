@@ -46,17 +46,16 @@
                 <index>true</index>
                 <analyzer>full_text_search</analyzer>
                 <!--
-                <index_analyzer>full_text_search_analyzer</index_analyzer>
-                <search_analyzer>default</search_analyzer>
+                <index_analyzer>full_text_index_analyzer</index_analyzer>
+                <search_analyzer>full_text_search_analyzer</search_analyzer>
                 -->
                 <fields>
                     <no-decompound type="text">
                         <store>true</store>
                         <index>true</index>
-                        <!--<analyzer>full_text_search_analyzer_no_decompound</analyzer>-->
                         <!--
-                        <index_analyzer>default</index_analyzer>
-                        <search_analyzer>default</search_analyzer>
+                        <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
+                        <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
                         -->
                     </no-decompound>
                     <no-stem type="text">
@@ -64,8 +63,8 @@
                         <index>true</index>
                         <analyzer>default</analyzer>
                         <!--
-                        <index_analyzer>default</index_analyzer>
-                        <search_analyzer>default</search_analyzer>
+                        <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
+                        <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
                         -->
                     </no-stem>
                 </fields>
@@ -73,8 +72,8 @@
             <fulltext_boosted type="text">
                 <analyzer>default</analyzer>
                 <!--
-                <index_analyzer>default</index_analyzer>
-                <search_analyzer>default</search_analyzer>
+                <index_analyzer>full_text_index_analyzer</index_analyzer>
+                <search_analyzer>full_text_search_analyzer</search_analyzer>
                 -->
                 <fields>
                     <edge type="text">
@@ -82,17 +81,16 @@
                         <index>true</index>
                         <analyzer>default</analyzer>
                         <!--
-                        <index_analyzer>default</index_analyzer>
-                        <search_analyzer>default</search_analyzer>
+                        <index_analyzer>full_text_edge_index_analyzer</index_analyzer>
+                        <search_analyzer>full_text_search_analyzer</search_analyzer>
                         -->
                     </edge>
                     <no-decompound type="text">
                         <store>true</store>
                         <index>true</index>
-                        <!--<analyzer>full_text_search_analyzer_no_decompound</analyzer>-->
                         <!--
-                        <index_analyzer>default</index_analyzer>
-                        <search_analyzer>default</search_analyzer>
+                        <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
+                        <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
                         -->
                     </no-decompound>
                     <no-stem type="text">
@@ -100,8 +98,8 @@
                         <index>true</index>
                         <analyzer>default</analyzer>
                         <!--
-                        <index_analyzer>default</index_analyzer>
-                        <search_analyzer>default</search_analyzer>
+                        <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
+                        <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
                         -->
                     </no-stem>
                 </fields>
@@ -124,14 +122,17 @@
             <facette type="keyword"/>
         </filter-numeric>
         <completion type="text">
-            <analyzer>default</analyzer>
             <fielddata>true</fielddata>
+            <analyzer>default</analyzer>
+            <!--
+            <analyzer>completion_analyzer</analyzer>
+            -->
         </completion>
         <suggestion type="text">
             <analyzer>default</analyzer>
             <!--
-            <index_analyzer>default</index_analyzer>
-            <search_analyzer>default</search_analyzer>
+            <index_analyzer>term_suggestion_analyzer</index_analyzer>
+            <search_analyzer>lowercase_analyzer</search_analyzer>
             -->
         </suggestion>
     </mapping>
