@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysis>
+    <!-- char filter declarations -->
+    <character_filter>
+        <strip_all_html_tags type="html_strip">
+            <!-- sample for escaping tags -->
+            <!--
+            <escaped_tags>
+                <b><![CDATA[b]]></b>
+            </escaped_tags>
+            -->
+        </strip_all_html_tags>
+    </character_filter>
+    <!-- tokenizer declarations -->
+    <tokenizer></tokenizer>
+    <!-- token filter declarations -->
+    <token_filter>
+        <decompound type="decompound">
+            <subwords_only>true</subwords_only>
+        </decompound>
+    </token_filter>
+    <!-- analyzer declarations -->
+    <analyzer>
+        <!-- analyzer for auto competition -->
+        <completion_analyzer type="custom">
+            <tokenizer>keyword</tokenizer>
+            <filter>
+                <snowball/>
+            </filter>
+        </completion_analyzer>
+        <!-- analyzer for regular fulltext search -->
+        <full_text_search type="custom">
+            <tokenizer>whitespace</tokenizer>
+            <filter>
+                <decompound/>
+                <lowercase/>
+                <word_delimiter/>
+                <unique/>
+            </filter>
+            <tokenizer>standard</tokenizer>
+        </full_text_search>
+        <full_text_search_boosted type="custom">
+            <tokenizer>whitespace</tokenizer>
+            <filter>
+                <lowercase/>
+                <word_delimiter/>
+                <unique/>
+            </filter>
+            <tokenizer>standard</tokenizer>
+        </full_text_search_boosted>
+    </analyzer>
+</analysis>
