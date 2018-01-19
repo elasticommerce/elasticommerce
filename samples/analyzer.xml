@@ -16,18 +16,28 @@
     <!-- token filter declarations -->
     <token_filter>
         <completion_stop type="stop">
-            <stopwords>_english_</stopwords>
+            <stopwords>_german_</stopwords>
         </completion_stop>
+        <full_text_search_stop type="stop">
+            <stopwords>_german_</stopwords>
+        </full_text_search_stop>
         <completion_snowball type="snowball">
-            <language>English</language>
+            <language>German2</language>
         </completion_snowball>
         <completion_edge type="edge_ngram">
-            <min_gram>2</min_gram>
-            <max_gram>8</max_gram>
+            <min_gram>3</min_gram>
+            <max_gram>20</max_gram>
         </completion_edge>
+        <search_fulltext_edge type="edge_ngram">
+            <min_gram>3</min_gram>
+            <max_gram>20</max_gram>
+        </search_fulltext_edge>
         <decompound type="decompound">
             <subwords_only>true</subwords_only>
         </decompound>
+        <full_text_search_snowball type="snowball">
+            <language>German2</language>
+        </full_text_search_snowball>
     </token_filter>
     <!-- analyzer declarations -->
     <analyzer>
@@ -41,24 +51,49 @@
             </filter>
         </completion_analyzer>
         <!-- analyzer for regular fulltext search -->
-        <full_text_search type="custom">
+        <search_full_text type="custom">
             <tokenizer>whitespace</tokenizer>
             <filter>
+                <word_delimiter/>
+                <lowercase/>
+                <full_text_search_stop/>
                 <decompound/>
-                <lowercase/>
-                <word_delimiter/>
                 <unique/>
+                <german_normalization/>
+                <full_text_search_snowball/>
             </filter>
-            <tokenizer>standard</tokenizer>
-        </full_text_search>
-        <full_text_search_boosted type="custom">
+        </search_full_text>
+        <search_full_text_edge type="custom">
             <tokenizer>whitespace</tokenizer>
             <filter>
-                <lowercase/>
                 <word_delimiter/>
+                <lowercase/>
+                <full_text_search_stop/>
+                <decompound/>
+                <unique/>
+                <german_normalization/>
+                <full_text_search_snowball/>
+                <search_fulltext_edge/>
+            </filter>
+        </search_full_text_edge>
+        <search_full_text_no_decompound type="custom">
+            <tokenizer>whitespace</tokenizer>
+            <filter>
+                <word_delimiter/>
+                <lowercase/>
+                <german_normalization/>
+                <full_text_search_snowball/>
+            </filter>
+        </search_full_text_no_decompound>
+        <search_full_text_no_stem type="custom">
+            <tokenizer>whitespace</tokenizer>
+            <filter>
+                <word_delimiter/>
+                <lowercase/>
+                <decompound/>
+                <german_normalization/>
                 <unique/>
             </filter>
-            <tokenizer>standard</tokenizer>
-        </full_text_search_boosted>
+        </search_full_text_no_stem>
     </analyzer>
 </analysis>

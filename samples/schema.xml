@@ -44,7 +44,7 @@
             <fulltext type="text">
                 <store>true</store>
                 <index>true</index>
-                <analyzer>full_text_search</analyzer>
+                <analyzer>search_full_text</analyzer>
                 <!--
                 <index_analyzer>full_text_index_analyzer</index_analyzer>
                 <search_analyzer>full_text_search_analyzer</search_analyzer>
@@ -53,6 +53,7 @@
                     <no-decompound type="text">
                         <store>true</store>
                         <index>true</index>
+                        <analyzer>search_full_text_no_decompound</analyzer>
                         <!--
                         <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
@@ -61,7 +62,7 @@
                     <no-stem type="text">
                         <store>true</store>
                         <index>true</index>
-                        <analyzer>default</analyzer>
+                        <analyzer>search_full_text_no_stem</analyzer>
                         <!--
                         <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
@@ -70,7 +71,7 @@
                 </fields>
             </fulltext>
             <fulltext_boosted type="text">
-                <analyzer>default</analyzer>
+                <analyzer>search_full_text</analyzer>
                 <!--
                 <index_analyzer>full_text_index_analyzer</index_analyzer>
                 <search_analyzer>full_text_search_analyzer</search_analyzer>
@@ -79,7 +80,7 @@
                     <edge type="text">
                         <store>true</store>
                         <index>true</index>
-                        <analyzer>default</analyzer>
+                        <analyzer>search_full_text_edge</analyzer>
                         <!--
                         <index_analyzer>full_text_edge_index_analyzer</index_analyzer>
                         <search_analyzer>full_text_search_analyzer</search_analyzer>
@@ -88,6 +89,7 @@
                     <no-decompound type="text">
                         <store>true</store>
                         <index>true</index>
+                        <analyzer>search_full_text_no_decompound</analyzer>
                         <!--
                         <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
@@ -96,7 +98,7 @@
                     <no-stem type="text">
                         <store>true</store>
                         <index>true</index>
-                        <analyzer>default</analyzer>
+                        <analyzer>search_full_text_no_stem</analyzer>
                         <!--
                         <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
@@ -121,7 +123,7 @@
         </filter-numeric>
         <completion type="text">
             <fielddata>true</fielddata>
-            <analyzer>default</analyzer>
+            <analyzer>completion_analyzer</analyzer>
             <!--
             <analyzer>completion_analyzer</analyzer>
             -->
