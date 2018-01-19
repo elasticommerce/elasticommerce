@@ -31,7 +31,7 @@
                         },
                         {
                           "terms": {
-                            "filter-numeric.filter": [
+                            "filter-numeric.value": [
                               "15"
                             ]
                           }
@@ -61,7 +61,7 @@
                         },
                         {
                           "terms": {
-                            "filter-numeric.filter": [
+                            "filter-numeric.value": [
                               "93",
                               "94",
                               "22"
@@ -128,7 +128,7 @@
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "filter-numeric.filter"
+                "field": "filter-numeric.value"
               }
             }
           }

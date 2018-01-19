@@ -117,9 +117,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      * @param $key
      * @param $value
      */
-    public function addFilter($name, $value, $type = self::FILTER_STRING, $facette = null)
+    public function addFilter($name, $value, $type = self::FILTER_STRING)
     {
-        $this->_data[$type][] = ['name' => $name, 'filter' => $value, 'facette' => empty($facette) ? $value : $facette];
+        $this->_data[$type][] = ['name' => $name, 'value' => $value];
     }
 
     /**

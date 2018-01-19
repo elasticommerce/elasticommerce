@@ -15,6 +15,16 @@
     <tokenizer></tokenizer>
     <!-- token filter declarations -->
     <token_filter>
+        <completion_stop type="stop">
+            <stopwords>_english_</stopwords>
+        </completion_stop>
+        <completion_snowball type="snowball">
+            <language>English</language>
+        </completion_snowball>
+        <completion_edge type="edge_ngram">
+            <min_gram>2</min_gram>
+            <max_gram>8</max_gram>
+        </completion_edge>
         <decompound type="decompound">
             <subwords_only>true</subwords_only>
         </decompound>
@@ -25,7 +35,9 @@
         <completion_analyzer type="custom">
             <tokenizer>keyword</tokenizer>
             <filter>
-                <snowball/>
+                <completion_stop/>
+                <completion_snowball/>
+                <completion_edge/>
             </filter>
         </completion_analyzer>
         <!-- analyzer for regular fulltext search -->

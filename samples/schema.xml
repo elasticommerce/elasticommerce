@@ -110,16 +110,14 @@
                 <store>true</store>
                 <index>true</index>
             </name>
-            <filter type="double"/>
-            <facette type="keyword"/>
+            <value type="double"/>
         </filter-string>
         <filter-numeric type="nested">
             <name type="keyword">
                 <store>true</store>
                 <index>true</index>
             </name>
-            <filter type="double"/>
-            <facette type="keyword"/>
+            <value type="double"/>
         </filter-numeric>
         <completion type="text">
             <fielddata>true</fielddata>

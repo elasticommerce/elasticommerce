@@ -61,16 +61,27 @@
         "facet_name": {
           "terms": {
             "field": "filter-numeric.name",
-            "exclude" : ["anchors", "categories","status", "visibility"]
+            "exclude": [
+              "anchors",
+              "categories",
+              "status",
+              "visibility"
+            ]
           },
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "filter-numeric.filter"
+                "field": "filter-numeric.value"
               }
             }
           }
         }
+      }
+    },
+    "autocomplete": {
+      "terms": {
+        "field": "completion",
+        "size": 100
       }
     }
   }
