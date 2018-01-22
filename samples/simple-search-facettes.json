@@ -55,12 +55,12 @@
   "aggregations": {
     "agg_numeric": {
       "nested": {
-        "path": "filter-numeric"
+        "path": "search.filter-numeric"
       },
       "aggs": {
         "facet_name": {
           "terms": {
-            "field": "filter-numeric.name",
+            "field": "search.filter-numeric.name",
             "exclude": [
               "anchors",
               "categories",
@@ -71,7 +71,7 @@
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "filter-numeric.value"
+                "field": "search.filter-numeric.value"
               }
             }
           }

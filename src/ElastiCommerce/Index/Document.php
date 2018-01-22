@@ -60,13 +60,16 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
         $this->docId = $docId;
         $this->docType = $docType;
         $this->action = $action;
-        $this->_data = ['result' => [],
+        $this->_data = [
+            'result' => [],
             self::SORT_STRING => [],
             self::SORT_NUMBER => [],
             self::SORT_DATE => [],
-            self::FILTER_STRING => [],
-            self::FILTER_NUMBER => [],
-            self::FILTER_DATE => []
+            ['search'] => [
+                self::FILTER_STRING => [],
+                self::FILTER_NUMBER => [],
+                self::FILTER_DATE => []
+            ]
         ];
     }
 
@@ -119,7 +122,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilter($name, $value, $type = self::FILTER_STRING)
     {
-        $this->_data[$type][] = ['name' => $name, 'value' => $value];
+        $this->_data['search'][$type][] = ['name' => $name, 'value' => $value];
     }
 
     /**

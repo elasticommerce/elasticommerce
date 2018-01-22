@@ -31,6 +31,7 @@ final class FieldTypeNested extends FieldTypeBase
     {
         $return = parent::toSchema();
         $return['properties'] = $this->getCollection()->toSchema();
+        $return['include_in_all'] = false;
         return $return;
     }
 }
