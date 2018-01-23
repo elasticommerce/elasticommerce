@@ -12,6 +12,9 @@ namespace SmartDevs\ElastiCommerce\Index;
  */
 class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
 {
+    const VISIBILITY = 'visibility';
+    const STATUS = 'status';
+
     const SORT_STRING = 'sort-string';
     const SORT_NUMBER = 'sort-numeric';
     const SORT_DATE = 'sort-date';
@@ -65,11 +68,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
             self::SORT_STRING => [],
             self::SORT_NUMBER => [],
             self::SORT_DATE => [],
-            ['search'] => [
-                self::FILTER_STRING => [],
-                self::FILTER_NUMBER => [],
-                self::FILTER_DATE => []
-            ]
+            self::FILTER_STRING => [],
+            self::FILTER_NUMBER => [],
+            self::FILTER_DATE => []
         ];
     }
 
@@ -91,6 +92,34 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     public function getId()
     {
         return $this->docId;
+    }
+
+    /**
+     * set visibility (products)
+     *
+     * @param int $value
+     */
+    public function setVisibility(int $value)
+    {
+        $this->_data[self::VISIBILITY] = $value;
+    }
+
+    /**
+     * set status (product)
+     *
+     * @param $value
+     */
+    public function setStatus(int $value)
+    {
+        $this->_data[self::STATUS] = $value;
+    }
+
+    public function setCategories($value){
+        $this->_data['category']['direct'] = $value;
+    }
+
+    public function setAnchors($value){
+        $this->_data['category']['anchors'] = $value;
     }
 
     /**
@@ -122,7 +151,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilter($name, $value, $type = self::FILTER_STRING)
     {
-        $this->_data['search'][$type][] = ['name' => $name, 'value' => $value];
+        $this->_data[$type][] = ['name' => $name, 'value' => $value];
     }
 
     /**
