@@ -21,8 +21,12 @@ final class FieldTypeNumeric extends FieldTypeBase implements FieldTypeImplement
      * @var string[]
      */
     protected $supportedParameters = [
-        'type',
-        'index',
-        'store'
     ];
+
+    /**
+     * valid boolean attributes
+     *
+     * @var string[]
+     */
+    protected $validAttributes = ['type', 'index', 'store'];
 }

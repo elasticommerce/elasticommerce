@@ -99,6 +99,10 @@ class FieldCollection extends DataCollection
                 $instance = new FieldTypeNumeric();
                 break;
             }
+            case 'object': {
+                $instance = new FieldTypeObject();
+                break;
+            }
             case 'nested': {
                 $instance = new FieldTypeNested();
                 break;

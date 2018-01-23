@@ -12,7 +12,6 @@ final class FieldTypeCompletion extends FieldTypeBase implements FieldTypeImplem
      * @var string[]
      */
     protected $supportedParameters = [
-        'type',
         'analyzer',
         'search_analyzer',
         'preserve_separators',
@@ -26,4 +25,11 @@ final class FieldTypeCompletion extends FieldTypeBase implements FieldTypeImplem
      * @var string[]
      */
     protected $validTypes = ['completion'];
+
+    /**
+     * valid boolean attributes
+     *
+     * @var string[]
+     */
+    protected $validAttributes = ['type'];
 }

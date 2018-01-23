@@ -3,10 +3,7 @@
     <dynamic_templates>
         <result>
             <path_match>result.*</path_match>
-            <mapping type="text">
-                <index>false</index>
-                <store>true</store>
-            </mapping>
+            <mapping type="text" index="false" store="true"/>
         </result>
         <scores>
             <path_match>score.*</path_match>
@@ -18,11 +15,7 @@
         </category-scores>
         <sort-string>
             <path_match>sort-string.*</path_match>
-            <mapping type="text">
-                <fielddata>true</fielddata>
-                <index>true</index>
-                <store>true</store><!-- temporary -->
-            </mapping>
+            <mapping type="keyword" index="true" store="true" fielddata="true"/>
         </sort-string>
         <sort-numeric>
             <path_match>sort-numeric.*</path_match>
@@ -32,106 +25,79 @@
         </sort-numeric>
         <sort-date>
             <path_match>sort-date.*</path_match>
-            <mapping type="date">
-                <index>false</index>
+            <mapping type="date" index="false">
                 <format>yyyy-MM-dd HH:mm:ss||yyyy-MM-dd</format>
             </mapping>
         </sort-date>
     </dynamic_templates>
     <mapping>
-        <result type="nested"/>
-        <search type="nested">
-            <fulltext type="text">
-                <store>true</store>
-                <index>true</index>
+        <result type="object" include_in_all="false"/>
+        <search type="object" include_in_all="false">
+            <fulltext type="text" store="false" index="true">
                 <analyzer>search_full_text</analyzer>
                 <!--
-                <index_analyzer>full_text_index_analyzer</index_analyzer>
                 <search_analyzer>full_text_search_analyzer</search_analyzer>
                 -->
                 <fields>
-                    <no-decompound type="text">
-                        <store>true</store>
-                        <index>true</index>
+                    <no-decompound type="text" store="false" index="true">
                         <analyzer>search_full_text_no_decompound</analyzer>
                         <!--
-                        <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
                         -->
                     </no-decompound>
-                    <no-stem type="text">
-                        <store>true</store>
-                        <index>true</index>
+                    <no-stem type="text" store="false" index="true">
                         <analyzer>search_full_text_no_stem</analyzer>
                         <!--
-                        <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
                         -->
                     </no-stem>
                 </fields>
             </fulltext>
-            <fulltext_boosted type="text">
+            <fulltext_boosted type="text" store="false" index="true">
                 <analyzer>search_full_text</analyzer>
                 <!--
-                <index_analyzer>full_text_index_analyzer</index_analyzer>
                 <search_analyzer>full_text_search_analyzer</search_analyzer>
                 -->
                 <fields>
-                    <edge type="text">
-                        <store>true</store>
-                        <index>true</index>
+                    <edge type="text" store="false" index="true">
                         <analyzer>search_full_text_edge</analyzer>
                         <!--
-                        <index_analyzer>full_text_edge_index_analyzer</index_analyzer>
                         <search_analyzer>full_text_search_analyzer</search_analyzer>
                         -->
                     </edge>
-                    <no-decompound type="text">
-                        <store>true</store>
-                        <index>true</index>
+                    <no-decompound type="text" store="false" index="true">
                         <analyzer>search_full_text_no_decompound</analyzer>
                         <!--
-                        <index_analyzer>full_text_index_analyzer_no_decompound</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_decompound</search_analyzer>
                         -->
                     </no-decompound>
-                    <no-stem type="text">
-                        <store>true</store>
-                        <index>true</index>
+                    <no-stem type="text" store="false" index="true">
                         <analyzer>search_full_text_no_stem</analyzer>
                         <!--
-                        <index_analyzer>full_text_index_analyzer_no_stem</index_analyzer>
                         <search_analyzer>full_text_search_analyzer_no_stem</search_analyzer>
                         -->
                     </no-stem>
                 </fields>
             </fulltext_boosted>
+            <filter-string type="nested" include_in_all="false">
+                <name type="keyword" store="false" index="true"/>
+                <value type="double"/>
+            </filter-string>
+            <filter-numeric type="nested" include_in_all="false">
+                <name type="keyword"  store="false" index="true"/>
+                <value type="double"/>
+            </filter-numeric>
         </search>
-        <filter-string type="nested">
-            <name type="keyword">
-                <store>true</store>
-                <index>true</index>
-            </name>
-            <value type="double"/>
-        </filter-string>
-        <filter-numeric type="nested">
-            <name type="keyword">
-                <store>true</store>
-                <index>true</index>
-            </name>
-            <value type="double"/>
-        </filter-numeric>
-        <completion type="text">
+        <completion type="text" index="true" include_in_all="false">
             <fielddata>true</fielddata>
             <analyzer>completion_analyzer</analyzer>
             <!--
             <analyzer>completion_analyzer</analyzer>
             -->
         </completion>
-        <suggestion type="text">
+        <suggestion type="text" include_in_all="false">
             <analyzer>default</analyzer>
             <!--
-            <index_analyzer>term_suggestion_analyzer</index_analyzer>
             <search_analyzer>lowercase_analyzer</search_analyzer>
             -->
         </suggestion>

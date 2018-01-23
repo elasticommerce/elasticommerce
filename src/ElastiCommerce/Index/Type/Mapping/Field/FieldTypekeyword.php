@@ -12,16 +12,11 @@ final class FieldTypeKeyword extends FieldTypeBase implements FieldTypeImplement
      * @var string[]
      */
     protected $supportedParameters = [
-        'type',
         'analyzer',
-        'index_analyzer',
         'search_analyzer',
         'boost',
         'fields',
-        'index',
-        'store',
-        'copy_to',
-        'fielddata'
+        'copy_to'
     ];
 
     /**
@@ -30,6 +25,13 @@ final class FieldTypeKeyword extends FieldTypeBase implements FieldTypeImplement
      * @var string[]
      */
     protected $validTypes = ['keyword'];
+
+    /**
+     * valid attributes
+     *
+     * @var string[]
+     */
+    protected $validAttributes = ['type', 'index', 'store', 'fielddata', 'include_in_all'];
 
     /**
      * fields collection

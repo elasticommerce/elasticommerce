@@ -16,8 +16,13 @@ final class FieldTypeDate extends FieldTypeBase implements FieldTypeImplementor
      * @var string[]
      */
     protected $supportedParameters = [
-        'type',
-        'format',
-        'store'
+        'format'
     ];
+
+    /**
+     * valid attributes
+     *
+     * @var string[]
+     */
+    protected $validAttributes = ['type', 'store', 'index'];
 }

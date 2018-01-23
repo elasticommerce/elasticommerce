@@ -27,17 +27,12 @@ abstract class FieldTypeBase extends DataObject
      */
     protected $validTypes = [];
 
-
     /**
-     * valid index options for validation
+     * valid attributes
      *
      * @var string[]
      */
-    protected $validIndexOptions = [
-        'no',
-        'not_analyzed',
-        'analyzed'
-    ];
+    protected $validAttributes = [];
 
     public function __construct()
     {
@@ -52,7 +47,7 @@ abstract class FieldTypeBase extends DataObject
      */
     protected function isParameterAllowed($name)
     {
-        if (false === in_array($name, $this->supportedParameters)) {
+        if (false === in_array($name, $this->supportedParameters) && false === in_array($name, $this->validAttributes)) {
             return false;
         }
         if (true === in_array($name, $this->bypassParameters)) {
@@ -87,6 +82,11 @@ abstract class FieldTypeBase extends DataObject
                 $this->setDataUsingMethod($name, $value->__toString());
             }
         }
+        foreach ($this->validAttributes as $attribute) {
+            if (true === isset($xml->attributes()->{$attribute})) {
+                $this->setDataUsingMethod($attribute, (string)$xml->attributes()->{$attribute});
+            }
+        }
         return $this;
     }
 
@@ -99,7 +99,7 @@ abstract class FieldTypeBase extends DataObject
     public function toSchema()
     {
         return array_filter($this->getData(), function ($key) {
-            return true === in_array($key, $this->supportedParameters);
+            return true === in_array($key, $this->supportedParameters) || true === in_array($key, $this->validAttributes);
         }, ARRAY_FILTER_USE_KEY);
     }
 
@@ -141,6 +141,10 @@ abstract class FieldTypeBase extends DataObject
         return $this->getId();
     }
 
+    /**
+     * @param $field
+     * @return FieldTypeBase
+     */
     public function setCopyTo($field)
     {
         if (false === isset($this->_data['copy_to'])) {

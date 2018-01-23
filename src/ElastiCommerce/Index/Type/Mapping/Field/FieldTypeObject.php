@@ -3,14 +3,14 @@
 namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Field;
 
 
-final class FieldTypeNested extends FieldTypeBase
+final class FieldTypeObject extends FieldTypeBase
 {
     /**
      * valid types to represent this object
      *
      * @var array
      */
-    protected $validTypes = ['nested'];
+    protected $validTypes = ['object'];
 
     /**
      * valid parameters for generating mapping schema
@@ -20,7 +20,7 @@ final class FieldTypeNested extends FieldTypeBase
     protected $supportedParameters = [];
 
     /**
-     * valid attributes
+     * valid boolean attributes
      *
      * @var string[]
      */
@@ -38,7 +38,6 @@ final class FieldTypeNested extends FieldTypeBase
     {
         $return = parent::toSchema();
         $return['properties'] = $this->getCollection()->toSchema();
-        $return['include_in_all'] = false;
         return $return;
     }
 }

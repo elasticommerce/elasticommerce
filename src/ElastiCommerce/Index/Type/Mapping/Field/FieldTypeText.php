@@ -12,17 +12,19 @@ final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
      * @var string[]
      */
     protected $supportedParameters = [
-        'type',
         'analyzer',
-        'index_analyzer',
         'search_analyzer',
         'boost',
         'fields',
-        'index',
-        'store',
-        'copy_to',
-        'fielddata'
+        'copy_to'
     ];
+
+    /**
+     * valid boolean attributes
+     *
+     * @var string[]
+     */
+    protected $validAttributes = ['type', 'index', 'store', 'fielddata', 'include_in_all'];
 
     /**
      * valid types to represent this object
