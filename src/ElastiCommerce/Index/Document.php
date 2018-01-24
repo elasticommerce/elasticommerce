@@ -105,7 +105,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     }
 
     /**
-     * set status (product)
+     * set document status
      *
      * @param $value
      */

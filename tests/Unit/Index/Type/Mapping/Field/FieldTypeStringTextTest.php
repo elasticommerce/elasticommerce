@@ -2,9 +2,9 @@
 #declare(strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
-use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeText;
+use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\FieldTypeString;
 
-class FieldTypeStringTest extends TestCase
+class FieldTypeStringTextTest extends TestCase
 {
 
     /**
@@ -17,7 +17,7 @@ class FieldTypeStringTest extends TestCase
      */
     protected function setUp()
     {
-        $this->fieldType = new FieldTypeText();
+        $this->fieldType = new FieldTypeString();
     }
 
     protected function tearDown()
@@ -74,7 +74,7 @@ class FieldTypeStringTest extends TestCase
     public function setTypeValidDataProvider()
     {
         return [
-            ['text']
+            ['keyword']
         ];
     }
 
@@ -86,14 +86,36 @@ class FieldTypeStringTest extends TestCase
         $this->fieldType->setType('integer');
     }
 
-    public function testInitFromXml()
+    public function testInitFromXmlAttributesFalse()
     {
-        $xml = new \SimpleXMLElement('
-            <test type="text"><index>no</index><store>false</store></test>
-            ');
+        $xml = new \SimpleXMLElement('<test type="text" index="false" store="false"/>');
         $this->fieldType->setXmlConfig($xml);
-        $this->assertStringMatchesFormat('no', $this->fieldType->getIndex());
+        $this->assertStringMatchesFormat('false', $this->fieldType->getIndex());
         $this->assertStringMatchesFormat('false', $this->fieldType->getStore());
+    }
+
+    public function testInitFromXmlAttributesTrue()
+    {
+        $xml = new \SimpleXMLElement('<test type="text" index="true" store="true"/>');
+        $this->fieldType->setXmlConfig($xml);
+        $this->assertStringMatchesFormat('true', $this->fieldType->getIndex());
+        $this->assertStringMatchesFormat('true', $this->fieldType->getStore());
+    }
+
+    public function testInitFromXmlAttributesIndexTrue()
+    {
+        $xml = new \SimpleXMLElement('<test type="text" index="true" store="false"/>');
+        $this->fieldType->setXmlConfig($xml);
+        $this->assertStringMatchesFormat('true', $this->fieldType->getIndex());
+        $this->assertStringMatchesFormat('false', $this->fieldType->getStore());
+    }
+
+    public function testInitFromXmlAttributesStoreTrue()
+    {
+        $xml = new \SimpleXMLElement('<test type="text" index="false" store="true"/>');
+        $this->fieldType->setXmlConfig($xml);
+        $this->assertStringMatchesFormat('false', $this->fieldType->getIndex());
+        $this->assertStringMatchesFormat('true', $this->fieldType->getStore());
     }
 
     public function testInitFromXmlWithFields()
@@ -113,12 +135,12 @@ class FieldTypeStringTest extends TestCase
         $this->fieldType->setXmlConfig($xml);
         $fields = $this->fieldType->getFields();
         $this->assertCount(2, $fields);
-        $this->assertEquals('text',$fields->getField('no-decompound')->getType());
-        $this->assertEquals('no-decompound',$fields->getField('no-decompound')->getName());
-        $this->assertEquals('full_text_search_analyzer_no_decompound',$fields->getField('no-decompound')->getAnalyzer());
-        $this->assertEquals('text',$fields->getField('no-stem')->getType());
-        $this->assertEquals('no-stem',$fields->getField('no-stem')->getName());
-        $this->assertEquals('default',$fields->getField('no-stem')->getAnalyzer());
+        $this->assertEquals('text', $fields->getField('no-decompound')->getType());
+        $this->assertEquals('no-decompound', $fields->getField('no-decompound')->getName());
+        $this->assertEquals('full_text_search_analyzer_no_decompound', $fields->getField('no-decompound')->getAnalyzer());
+        $this->assertEquals('text', $fields->getField('no-stem')->getType());
+        $this->assertEquals('no-stem', $fields->getField('no-stem')->getName());
+        $this->assertEquals('default', $fields->getField('no-stem')->getAnalyzer());
 
     }
 }

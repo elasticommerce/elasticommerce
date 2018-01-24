@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartDevs\ElastiCommerce\Index\Type\Mapping;
 
 use SmartDevs\ElastiCommerce\Index\Type\Mapping\Field\{
-    FieldTypeBase, FieldTypeDate, FieldTypeNested, FieldTypeNumeric, FieldTypeText, FieldTypeKeyword
+    FieldTypeBase, FieldTypeDate, FieldTypeNested, FieldTypeNumeric, FieldTypeString, FieldTypeKeyword
 };
 use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
@@ -70,7 +70,7 @@ final class DynamicTemplate extends DataObject
     {
         switch ($type) {
             case 'text': {
-                $instance = new FieldTypeText();
+                $instance = new FieldTypeString();
                 break;
             }
             case 'keyword': {

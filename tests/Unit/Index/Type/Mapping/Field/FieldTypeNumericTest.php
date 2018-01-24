@@ -90,14 +90,4 @@ class FieldTypeNumericTest extends TestCase
     {
         $this->fieldType->setType('string');
     }
-
-    public function testInitFromXml()
-    {
-        $xml = new \SimpleXMLElement('
-            <test type="string"><index>no</index><store>false</store></test>
-            ');
-        $this->fieldType->setXmlConfig($xml);
-        $this->assertStringMatchesFormat('no', $this->fieldType->getIndex());
-        $this->assertStringMatchesFormat('false', $this->fieldType->getStore());
-    }
 }

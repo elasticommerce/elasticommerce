@@ -4,7 +4,7 @@ namespace SmartDevs\ElastiCommerce\Index\Type\Mapping\Field;
 
 use SmartDevs\ElastiCommerce\Implementor\Index\Type\Mapping\Field\FieldTypeImplementor;
 
-final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
+final class FieldTypeString extends FieldTypeBase implements FieldTypeImplementor
 {
     /**
      * valid parameters for generating mapping schema
@@ -24,26 +24,26 @@ final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
      *
      * @var string[]
      */
-    protected $validAttributes = ['type', 'index', 'store', 'fielddata', 'include_in_all'];
+    protected $validAttributes = ['type', 'index', 'store', 'fielddata'];
 
     /**
      * valid types to represent this object
      *
      * @var string[]
      */
-    protected $validTypes = ['text'];
+    protected $validTypes = ['text', 'keyword'];
 
     /**
      * fields collection
      *
-     * @var TypeTextFieldCollection
+     * @var FieldTypeStringFieldCollection
      */
     protected $fields = null;
 
     public function setXmlConfig(\SimpleXMLElement $xml)
     {
         if (true === isset($xml->fields) && true === $this->hasValueChildren($xml->fields)) {
-            $this->fields = new FieldTypeTextFieldCollection();
+            $this->fields = new FieldTypeStringFieldCollection();
             $this->fields->setXmlConfig($xml->fields);
             unset($xml->fields);
             //add fields
@@ -65,7 +65,7 @@ final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
     /**
      * get fields collection
      *
-     * @return TypeStringFieldCollection
+     * @return FieldTypeStringFieldCollection
      */
     public function getFields()
     {
@@ -80,7 +80,7 @@ final class FieldTypeText extends FieldTypeBase implements FieldTypeImplementor
     public function toSchema()
     {
         $return = parent::toSchema();
-        if ($this->fields instanceof FieldTypeTextFieldCollection && $this->fields->count() > 0) {
+        if ($this->fields instanceof FieldTypeStringFieldCollection && $this->fields->count() > 0) {
             $return['fields'] = $this->fields->toSchema();
         }
         return $return;
