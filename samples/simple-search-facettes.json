@@ -17,8 +17,8 @@
         {
           "multi_match": {
             "fields": [
-              "search.fulltext_boosted^7",
-              "search.fulltext^2"
+              "fulltext_boosted^7",
+              "fulltext^2"
             ],
             "operator": "AND",
             "type": "cross_fields",
@@ -30,19 +30,19 @@
         {
           "multi_match": {
             "fields": [
-              "search.fulltext_boosted.no-stem^7",
-              "search.fulltext.no-stem^2"
+              "fulltext_boosted.no-stem^7",
+              "fulltext.no-stem^2"
             ],
             "operator": "OR",
             "type": "cross_fields",
-            "query": "Shirt Male Regular"
+            "query": "Sunglasses"
           }
         },
         {
           "multi_match": {
             "fields": [
-              "search.fulltext_boosted.no-decompound^7",
-              "search.fulltext.no-decompound^2"
+              "fulltext_boosted.no-decompound^7",
+              "fulltext.no-decompound^2"
             ],
             "operator": "OR",
             "type": "cross_fields",
@@ -55,12 +55,12 @@
   "aggregations": {
     "agg_numeric": {
       "nested": {
-        "path": "search.filter-numeric"
+        "path": "filter-numeric"
       },
       "aggs": {
         "facet_name": {
           "terms": {
-            "field": "search.filter-numeric.name",
+            "field": "filter-numeric.name",
             "exclude": [
               "anchors",
               "categories",
@@ -71,17 +71,11 @@
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "search.filter-numeric.value"
+                "field": "filter-numeric.value"
               }
             }
           }
         }
-      }
-    },
-    "autocomplete": {
-      "terms": {
-        "field": "completion",
-        "size": 100
       }
     }
   }
