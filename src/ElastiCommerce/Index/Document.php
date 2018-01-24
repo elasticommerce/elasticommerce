@@ -153,7 +153,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilterNumeric($name, $value)
     {
-        $this->data[self::FILTER_NUMBER][$name] = ['name' => $name, 'value' => $value];
+        $this->data[self::FILTER_NUMBER][] = ['name' => $name, 'value' => $value];
     }
 
     /**
