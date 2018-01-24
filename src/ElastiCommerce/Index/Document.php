@@ -12,8 +12,10 @@ namespace SmartDevs\ElastiCommerce\Index;
  */
 class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
 {
-    const VISIBILITY = 'visibility';
-    const STATUS = 'status';
+    /**
+     * result field array key
+     */
+    const RESULT = 'result';
 
     const SORT_STRING = 'sort-string';
     const SORT_NUMBER = 'sort-numeric';
@@ -22,6 +24,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     const FILTER_STRING = 'filter-string';
     const FILTER_NUMBER = 'filter-numeric';
     const FILTER_DATE = 'filter-date';
+
+    const VISIBILITY = 'visibility';
+    const STATUS = 'status';
 
     /**
      * document id
@@ -63,8 +68,8 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
         $this->docId = $docId;
         $this->docType = $docType;
         $this->action = $action;
-        $this->_data = [
-            'result' => [],
+        $this->data = [
+            self::RESULT => [],
             self::SORT_STRING => [],
             self::SORT_NUMBER => [],
             self::SORT_DATE => [],
@@ -95,13 +100,81 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     }
 
     /**
+     * set result data
+     *
+     * @param array $data
+     */
+    public function addResultData(array $data)
+    {
+        $this->data[self::RESULT] += $data;
+    }
+
+    /**
+     * set result data
+     *
+     * @param array $data
+     */
+    public function setResultData(array $data)
+    {
+        $this->data[self::RESULT] = $data;
+    }
+
+    public function addSortString($key, $value)
+    {
+        $this->data[self::SORT_STRING][$key] = $value;
+    }
+
+    public function addSortNumeric($key, $value)
+    {
+        $this->data[self::SORT_NUMBER][$key] = $value;
+    }
+
+    public function addSortDate($key, $value)
+    {
+        $this->data[self::SORT_DATE][$key] = $value;
+    }
+
+    /**
+     * add string value for filtering
+     *
+     * @param $key
+     * @param $value
+     */
+    public function addFilterString($name, $value)
+    {
+        $this->data[self::FILTER_STRING][] = ['name' => $name, 'value' => $value];
+    }
+
+    /**
+     * add numeric value for filtering
+     *
+     * @param $key
+     * @param $value
+     */
+    public function addFilterNumeric($name, $value)
+    {
+        $this->data[self::FILTER_NUMBER][$name] = ['name' => $name, 'value' => $value];
+    }
+
+    /**
+     * add numeric value for filtering
+     *
+     * @param $key
+     * @param $value
+     */
+    public function addFilterDate($name, $value)
+    {
+        $this->data[self::FILTER_DATE][] = ['name' => $name, 'value' => $value];
+    }
+
+    /**
      * set visibility (products)
      *
      * @param int $value
      */
     public function setVisibility(int $value)
     {
-        $this->_data[self::VISIBILITY] = $value;
+        $this->data[self::VISIBILITY] = $value;
     }
 
     /**
@@ -111,47 +184,17 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function setStatus(int $value)
     {
-        $this->_data[self::STATUS] = $value;
+        $this->data[self::STATUS] = $value;
     }
 
-    public function setCategories($value){
-        $this->_data['category']['direct'] = $value;
-    }
-
-    public function setAnchors($value){
-        $this->_data['category']['anchors'] = $value;
-    }
-
-    /**
-     * add result data
-     *
-     * @param array $data
-     */
-    public function addResultData(array $data)
+    public function setCategories($value)
     {
-        $this->_data['result'] += $data;
+        $this->data['category']['direct'] = $value;
     }
 
-    /**
-     * add value for sorting
-     *
-     * @param $key
-     * @param $value
-     */
-    public function addSort($key, $value, $type = self::SORT_STRING)
+    public function setAnchors($value)
     {
-        $this->_data[$type][$key] = $value;
-    }
-
-    /**
-     * add value for filtering
-     *
-     * @param $key
-     * @param $value
-     */
-    public function addFilter($name, $value, $type = self::FILTER_STRING)
-    {
-        $this->_data[$type][] = ['name' => $name, 'value' => $value];
+        $this->data['category']['anchors'] = $value;
     }
 
     /**
@@ -163,13 +206,14 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     public function getBulkArray(string $index)
     {
         $return = array();
-        $return[] = ['index' => [
-            '_index' => $index,
-            '_type' => $this->docType,
-            '_id' => $this->docId,
-        ]
+        $return[] = [
+            'index' => [
+                '_index' => $index,
+                '_type' => $this->docType,
+                '_id' => $this->docId,
+            ]
         ];
-        $return[] = $this->_data;
+        $return[] = $this->data;
         return $return;
     }
 }
