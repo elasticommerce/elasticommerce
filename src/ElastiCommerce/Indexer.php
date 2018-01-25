@@ -224,7 +224,6 @@ class Indexer
         $this->getBulk()->walk(function ($item) use (&$params, $indexName) {
             $params = array_merge($params, $item->getBulkArray($indexName));
         });
-
         $this->getConnection()->bulk(['body' => $params]);
         $this->getBulk()->clear();
     }

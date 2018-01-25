@@ -1,0 +1,19 @@
+{
+  "script": {
+    "inline": "if (ctx._source.filter_numeric == null || ctx._source.filter_numeric.size() == 0){ ctx._source.filter_numeric = params.update}  else {int found = 0; for (int i = 0; i < ctx._source.filter_numeric.size(); i++){ if(ctx._source.filter_numeric[i].name == params.update[0].name){ctx._source.filter_numeric[i] = params.update[0]; found = 1} } if(found == 0) {ctx._source.filter_numeric.add(params.update[0])} }",
+    "lang": "painless",
+    "params": {
+      "update": [
+        {
+          "name": "color",
+          "value": [
+            28,
+            15,
+            12,
+            14
+          ]
+        }
+      ]
+    }
+  }
+}

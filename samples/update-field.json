@@ -1,0 +1,21 @@
+//ctx._source.filter_numeric.add(params.update)
+
+
+
+
+
+{
+  "script": {
+    "inline": "if (ctx._source.filter_numeric == null || ctx._source.filter_numeric.size() == 0){ ctx._source.filter_numeric = params.update}  else {for (int i = 0; i < ctx._source.filter_numeric.size(); i++){ if(ctx._source.filter_numeric[i].name == update.name){ctx._source.fields.remove(i);} }",
+    "lang": "painless",
+    "params": {
+      "update": {
+        "name": "color",
+        "value": [
+          28,
+          15
+        ]
+      }
+    }
+  }
+}

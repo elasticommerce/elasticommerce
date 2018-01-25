@@ -1,0 +1,18 @@
+// remove result field
+{
+  "script": "ctx._source.['result'].remove('price')"
+}
+//remove filter field
+{
+  "script": "ctx._source['filter-numeric'].remove('material')"
+}
+
+
+{
+  "script": "ctx._source['filter-numeric']['color'] = params.update",
+  "params": {
+    "update": {
+      "name": "color"
+    }
+  }
+}

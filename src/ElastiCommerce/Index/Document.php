@@ -17,13 +17,13 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     const RESULT = 'result';
 
-    const SORT_STRING = 'sort-string';
-    const SORT_NUMBER = 'sort-numeric';
-    const SORT_DATE = 'sort-date';
+    const SORT_STRING = 'sort_string';
+    const SORT_NUMBER = 'sort_numeric';
+    const SORT_DATE = 'sort_date';
 
-    const FILTER_STRING = 'filter-string';
-    const FILTER_NUMBER = 'filter-numeric';
-    const FILTER_DATE = 'filter-date';
+    const FILTER_STRING = 'filter_string';
+    const FILTER_NUMBER = 'filter_numeric';
+    const FILTER_DATE = 'filter_date';
 
     const VISIBILITY = 'visibility';
     const STATUS = 'status';
