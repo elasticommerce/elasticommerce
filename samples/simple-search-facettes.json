@@ -5,12 +5,8 @@
     ]
   },
   "sort": [
-    {
-      "sort-string.name": {
-        "order": "asc"
-      }
-    }
   ],
+  "size": 0,
   "query": {
     "bool": {
       "must": [
@@ -55,12 +51,12 @@
   "aggregations": {
     "agg_numeric": {
       "nested": {
-        "path": "filter-numeric"
+        "path": "filter_numeric"
       },
       "aggs": {
         "facet_name": {
           "terms": {
-            "field": "filter-numeric.name",
+            "field": "filter_numeric.name",
             "exclude": [
               "anchors",
               "categories",
@@ -71,10 +67,18 @@
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "filter-numeric.value"
+                "field": "filter_numeric.value"
               }
             }
           }
+        }
+      }
+    },
+    "autocomplete": {
+      "terms": {
+        "field": "completion",
+        "order": {
+          "_count": "desc"
         }
       }
     }
