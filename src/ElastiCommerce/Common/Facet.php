@@ -1,5 +1,6 @@
 <?php
 namespace SmartDevs\ElastiCommerce\Common;
+
 use SmartDevs\ElastiCommerce\Common\Facet\Value;
 
 /**
@@ -37,7 +38,7 @@ class Facet
     /**
      * @return array
      */
-    public function getValues(): array
+    public function getValues()
     {
         return $this->_values;
     }
@@ -57,13 +58,13 @@ class Facet
      */
     public function setValues(array $values): Facet
     {
-        $data = [];
+        $data = new Collection();
         if(is_array($values)){
             foreach ($values as $key => $value){
                 if(is_array($value)) {
-                    $data[$key] = new Value($value);
+                    $data->addItem(new Value($value), $key);
                 }elseif($value instanceof Value){
-                    $data[$key] = $value;
+                    $data->addItem($value, $key);
                 }
             }
         }else{

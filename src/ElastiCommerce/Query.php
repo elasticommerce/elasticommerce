@@ -144,10 +144,7 @@ class Query
 
         $this->addFacetsToCollection($result['aggregations'], 'facets_numeric');
         $this->addFacetsToCollection($result['aggregations'], 'facets_string');
-
-        #print_r('<pre>');
-        #print_r($this->facetCollection);
-        #print_r('</pre>');
+        $this->addFacetsToCollection($result['aggregations'], 'facets_date');
 
         return $this->facetCollection;
     }

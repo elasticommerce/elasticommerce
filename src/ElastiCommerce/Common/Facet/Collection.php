@@ -56,4 +56,15 @@ class Collection implements IteratorAggregate, Countable
         return count($this->_facets);
     }
 
+    /**
+     * @param $type
+     * @return array
+     */
+    public function getByType($type)
+    {
+        $facets = array_filter($this->_facets, function($value) use ($type){
+            if($value->getType() == $type) return $value;
+        });
+        return $facets;
+    }
 }
