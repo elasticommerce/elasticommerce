@@ -139,10 +139,11 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      *
      * @param $key
      * @param $value
+     * @para $type
      */
-    public function addFilterString($name, $value)
+    public function addFilterString($name, $value, $type = '')
     {
-        $this->data[self::FILTER_STRING][] = ['name' => $name, 'value' => $value];
+        $this->data[self::FILTER_STRING][] = ['name' => $name, 'value' => $value, 'type' => $type];
     }
 
     /**
@@ -150,10 +151,11 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      *
      * @param $key
      * @param $value
+     * @param $type
      */
-    public function addFilterNumeric($name, $value)
+    public function addFilterNumeric($name, $value, $type = '')
     {
-        $this->data[self::FILTER_NUMBER][] = ['name' => $name, 'value' => $value];
+        $this->data[self::FILTER_NUMBER][] = ['name' => $name, 'value' => $value, 'type' => $type];
     }
 
     /**
