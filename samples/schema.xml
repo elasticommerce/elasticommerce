@@ -13,10 +13,6 @@
             <path_match>stock.status</path_match>
             <mapping type="double" index="true" store="false"/>
         </stock_qty>
-        <price>
-            <path_match>price_customer_group_*.*</path_match>
-            <mapping type="double" index="true" store="true"/>
-        </price>
         <scores>
             <path_match>score.*</path_match>
             <mapping type="double"/>
@@ -29,6 +25,10 @@
             <path_match>sort_string.*</path_match>
             <mapping type="keyword" index="true" store="true" fielddata="true"/>/>
         </sort_string>
+        <price>
+            <path_match>price.*</path_match>
+            <mapping type="double" index="true" store="false"/>
+        </price>
         <sort_numeric>
             <path_match>sort_numeric.*</path_match>
             <mapping type="double" index="true" store="false"/>
@@ -114,10 +114,14 @@
                 </no-stem>
             </fields>
         </fulltext_boosted>
-        <filter_string type="nested" include_in_all="false">
+        <filter_string type="nested">
             <name type="keyword" store="false" index="true"/>
             <value type="double"/>
         </filter_string>
+        <filter_price type="nested">
+            <name type="keyword" store="false" index="true"/>
+            <value type="double"/>
+        </filter_price>
         <filter_numeric type="nested">
             <name type="keyword" store="false" index="true"/>
             <value type="double"/>
