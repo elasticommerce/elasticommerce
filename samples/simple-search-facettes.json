@@ -4,8 +4,7 @@
       "result.*"
     ]
   },
-  "sort": [
-  ],
+  "sort": [],
   "size": 0,
   "query": {
     "bool": {
@@ -74,12 +73,11 @@
         }
       }
     },
-    "autocomplete": {
-      "terms": {
-        "field": "completion",
-        "order": {
-          "_count": "desc"
-        }
+    "prices": {
+      "histogram": {
+        "field": "price.final_price_customer_group_0",
+        "interval": 10,
+        "min_doc_count" : 1
       }
     }
   }

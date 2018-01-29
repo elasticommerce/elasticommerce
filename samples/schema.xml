@@ -13,6 +13,10 @@
             <path_match>stock.status</path_match>
             <mapping type="double" index="true" store="false"/>
         </stock_qty>
+        <price>
+            <path_match>price_customer_group_*.*</path_match>
+            <mapping type="double" index="true" store="true"/>
+        </price>
         <scores>
             <path_match>score.*</path_match>
             <mapping type="double"/>
