@@ -286,10 +286,16 @@ class Query
     /**
      * @param $aggregations
      * @param $type
+     * @throws \Exception
      */
     private function addFacetsToCollection($aggregations, $type)
     {
-        if(array_key_exists($type, $aggregations) && is_array($aggregations[$type]['facet_name']['buckets'])) {
+        if(
+            array_key_exists($type, $aggregations)
+            && array_key_exists('facet_name', $aggregations[$type])
+            && array_key_exists('buckets', $aggregations[$type]['facet_name'])
+            && is_array($aggregations[$type]['facet_name']['buckets'])
+        ) {
             foreach ($aggregations[$type]['facet_name']['buckets'] as $rawFacet) {
                 $facet = $this->createFacet($rawFacet);
                 $this->facetCollection->addItem($facet);
