@@ -83,7 +83,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      * @param string $docId
      * @return $this
      */
-    public function setId(string $docId)
+    public function setId($docId)
     {
         $this->docId = $docId;
         return $this;
