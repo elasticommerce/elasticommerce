@@ -5,6 +5,14 @@
             <path_match>result.*</path_match>
             <mapping type="text" index="false" store="true"/>
         </result>
+        <stock_status>
+            <path_match>stock.status</path_match>
+            <mapping type="boolean" index="true" store="false"/>
+        </stock_status>
+        <stock_qty>
+            <path_match>stock.status</path_match>
+            <mapping type="double" index="true" store="false"/>
+        </stock_qty>
         <scores>
             <path_match>score.*</path_match>
             <mapping type="double"/>
@@ -46,6 +54,9 @@
     </dynamic_templates>
     <mapping>
         <result type="object"/>
+        <stock type="object"/>
+        <price type="object"/>
+        <category type="object"/>
         <fulltext type="text" store="false" index="true">
             <analyzer>search_full_text</analyzer>
             <!--
@@ -107,7 +118,6 @@
             <name type="keyword" store="false" index="true"/>
             <value type="double"/>
         </filter_numeric>
-        <category type="object"/>
         <sort_string type="object"/>
         <sort_numeric type="object"/>
         <completion type="text" index="true">

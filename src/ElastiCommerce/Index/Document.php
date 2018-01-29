@@ -197,6 +197,11 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
         $this->data['category']['anchors'] = $value;
     }
 
+    public function setStock(bool $status, float $qty)
+    {
+        $this->data['stock'] = ['status' => (bool)$status, 'qty' => $qty];
+    }
+
     /**
      * get document prepared for bulk actions
      *

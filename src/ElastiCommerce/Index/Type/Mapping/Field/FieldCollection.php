@@ -100,6 +100,10 @@ class FieldCollection extends DataCollection
                 $instance = new FieldTypeObject();
                 break;
             }
+            case 'boolean': {
+                $instance = new FieldTypeBoolean();
+                break;
+            }
             case 'nested': {
                 $instance = new FieldTypeNested();
                 break;
