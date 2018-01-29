@@ -2,6 +2,8 @@
 namespace SmartDevs\ElastiCommerce\Common;
 
 use SmartDevs\ElastiCommerce\Common\Facet\Value;
+use SmartDevs\ElastiCommerce\Util\Data\DataCollection;
+use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
 /**
  * Class Facet
@@ -51,21 +53,27 @@ class Facet
     {
         $this->_values[$key] = $value;
     }
+
     /**
      * @param array $values
      *
      * @return Facet
+     * @throws \Exception
      */
     public function setValues(array $values): Facet
     {
-        $data = new Collection();
+        $data = new DataCollection();
         if(is_array($values)){
             foreach ($values as $key => $value){
+                $dataObject = new DataObject();
                 if(is_array($value)) {
-                    $data->addItem(new Value($value), $key);
+                    $dataObject->setData('value', $value['key']);
+                    $dataObject->setData('doc_count', $value['doc_count']);
                 }elseif($value instanceof Value){
-                    $data->addItem($value, $key);
+                    $dataObject->setData('value', $value->getValue());
+                    $dataObject->setData('doc_count', $value->getDocCount());
                 }
+                $data->addItem($dataObject);
             }
         }else{
             $data = $values;

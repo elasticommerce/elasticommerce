@@ -3,11 +3,16 @@ namespace SmartDevs\ElastiCommerce;
 
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\Match;
+use Elastica\Query\Term;
 use SmartDevs\ElastiCommerce\Common\Connection;
 use SmartDevs\ElastiCommerce\Common\Facet;
 use SmartDevs\ElastiCommerce\Common\Facet\Collection;
 use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Config\ServerConfig;
+use SmartDevs\ElastiCommerce\Util\Data\DataCollection;
+use SmartDevs\ElastiCommerce\Util\Data\DataObject;
 
 /**
  * Class Query
@@ -42,6 +47,26 @@ class Query
     private $facetCollection;
 
     /**
+     * @var array
+     */
+    protected $_filter = [];
+
+    /**
+     * @var bool
+     */
+    private $_isLoaded = false;
+
+    /**
+     * @var null | array
+     */
+    private $_result = null;
+
+    /**
+     * @var BoolQuery
+     */
+    private $_query;
+
+    /**
      * Indexer constructor.
      *
      * @param ServerConfig $serverConfig
@@ -51,7 +76,8 @@ class Query
     {
         $this->setServerConfig($serverConfig);
         $this->setIndexConfig($indexConfig);
-        $this->facetCollection = new Collection();
+        $this->facetCollection = new DataCollection();
+        $this->_query = new BoolQuery();
     }
 
     /**
@@ -118,9 +144,36 @@ class Query
     }
 
 
+    /**
+     * @return DataCollection
+     * @throws \Exception
+     */
     public function getResult()
     {
-        
+        $query = new \Elastica\Query();
+
+        $indexName = $this->getIndexName();
+
+        /** @var \Elasticsearch\Client $connection */
+        $connection = $this->getConnection();
+
+        foreach ($this->_filter as $filter){
+            $this->_query->addMust($filter);
+        }
+
+        $query->setQuery($this->_query);
+        $query->setSize(10000);
+
+        $result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
+
+        $resultCollection = new DataCollection();
+        foreach ($result['hits']['hits'] as $entry){
+            $resultObject = new DataObject();
+            $resultObject->addData($entry['_source']);
+            $resultCollection->addItem($resultObject);
+        }
+
+        return $resultCollection;
     }
 
     /**
@@ -135,20 +188,23 @@ class Query
         $query = new \Elastica\Query();
         $query->addAggregation($numericAgg);
         $query->addAggregation($stringAgg);
+        $query->addAggregation($dateAgg);
+
+        foreach ($this->_filter as $filter){
+            $this->_query->addMust($filter);
+        }
+
+        $query->setQuery($this->_query);
+        $query->setSize(10000);
 
         $indexName = $this->getIndexName();
 
-        /** @var \Elasticsearch\Client $connection */
         $connection = $this->getConnection();
         $result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
 
         $this->addFacetsToCollection($result['aggregations'], 'facets_numeric');
         $this->addFacetsToCollection($result['aggregations'], 'facets_string');
         $this->addFacetsToCollection($result['aggregations'], 'facets_date');
-
-        #print_r('<pre>');
-        #print_r($this->facetCollection);
-        #print_r('</pre>');
 
         return $this->facetCollection;
     }
@@ -166,11 +222,6 @@ class Query
         $valueAgg->setField('filter_numeric.value');
         $valueAgg->setSize(10000);
 
-        $typeAgg = new Terms('facet_type');
-        $typeAgg->setField('filter_numeric.type');
-        $typeAgg->setSize(10000);
-
-        $nameAgg->addAggregation($typeAgg);
         $nameAgg->addAggregation($valueAgg);
 
         $numericAgg = new Nested('facets_numeric', 'filter_numeric');
@@ -191,11 +242,6 @@ class Query
         $valueAgg->setField('filter_string.value');
         $valueAgg->setSize(10000);
 
-        $typeAgg = new Terms('facet_type');
-        $typeAgg->setField('filter_string.type');
-        $typeAgg->setSize(10000);
-
-        $nameAgg->addAggregation($typeAgg);
         $nameAgg->addAggregation($valueAgg);
 
         $stringAgg = new Nested('facets_string', 'filter_string');
@@ -217,11 +263,6 @@ class Query
         $valueAgg->setField('filter_date.value');
         $valueAgg->setSize(10000);
 
-        $typeAgg = new Terms('facet_type');
-        $typeAgg->setField('filter_date.type');
-        $typeAgg->setSize(10000);
-
-        $nameAgg->addAggregation($typeAgg);
         $nameAgg->addAggregation($valueAgg);
 
         $dateAgg = new Nested('facets_date', 'filter_date');
@@ -233,12 +274,11 @@ class Query
      * @param $rawFacet
      * @return Facet
      */
-    public function createFacet($rawFacet): Facet
+    private function createFacet($rawFacet): DataObject
     {
-        $facet = new Facet();
+        $facet = new DataObject();
         $facet->setCode($rawFacet['key']);
         $facet->setDocCount($rawFacet['doc_count']);
-        $facet->setType($rawFacet['facet_type']['buckets'][0]['key']);
         $facet->setValues($rawFacet['facet_value']['buckets']);
         return $facet;
     }
@@ -249,11 +289,33 @@ class Query
      */
     private function addFacetsToCollection($aggregations, $type)
     {
-        if(array_key_exists($type, $aggregations)) {
+        if(array_key_exists($type, $aggregations) && is_array($aggregations[$type]['facet_name']['buckets'])) {
             foreach ($aggregations[$type]['facet_name']['buckets'] as $rawFacet) {
                 $facet = $this->createFacet($rawFacet);
-                $this->facetCollection->addFacet($facet);
+                $this->facetCollection->addItem($facet);
             }
         }
+    }
+
+    /**
+     * @param $fieldName
+     * @param $value
+     * @return $this
+     */
+    public function addFieldToFilter($fieldName, $value)
+    {
+        $filter = new \Elastica\Query\Match();
+        $filter->setParam($fieldName, $value);
+        $this->_filter[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function load()
+    {
+        return true;
     }
 }
