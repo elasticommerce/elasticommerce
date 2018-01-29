@@ -42,7 +42,7 @@ class Query
     private $connection;
 
     /**
-     * @var Collection
+     * @var mixed
      */
     private $facetCollection;
 
@@ -65,6 +65,16 @@ class Query
      * @var BoolQuery
      */
     private $_query;
+
+    /**
+     * @var integer
+     */
+    private $_limit = 10000;
+
+    /**
+     * @var integer
+     */
+    private $_offset = 0;
 
     /**
      * Indexer constructor.
@@ -98,7 +108,7 @@ class Query
      *
      * @return \Elasticsearch\Client
      */
-    protected function getConnection(): \Elasticsearch\Client
+    protected function getConnection()
     {
         if (null === $this->connection) {
             $connectionManager = new Connection($this->getServerConfig());
@@ -143,31 +153,30 @@ class Query
         return $this;
     }
 
+    /**
+     * @param $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->_limit = $limit;
+    }
 
+    /**
+     * @param $offset
+     */
+    public function setOffset($offset)
+    {
+        $this->_offset = $offset;
+    }
     /**
      * @return DataCollection
      * @throws \Exception
      */
     public function getResult()
     {
-        $query = new \Elastica\Query();
-
-        $indexName = $this->getIndexName();
-
-        /** @var \Elasticsearch\Client $connection */
-        $connection = $this->getConnection();
-
-        foreach ($this->_filter as $filter){
-            $this->_query->addMust($filter);
-        }
-
-        $query->setQuery($this->_query);
-        $query->setSize(10000);
-
-        $result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
 
         $resultCollection = new DataCollection();
-        foreach ($result['hits']['hits'] as $entry){
+        foreach ($this->_result['hits']['hits'] as $entry){
             $resultObject = new DataObject();
             $resultObject->addData($entry['_source']);
             $resultCollection->addItem($resultObject);
@@ -178,34 +187,10 @@ class Query
 
     /**
      *
+     * @throws \Exception
      */
     public function getFacets()
     {
-        $numericAgg = $this->getNumericFacets();
-        $stringAgg = $this->getStringFacets();
-        $dateAgg = $this->getDateFacets();
-
-        $query = new \Elastica\Query();
-        $query->addAggregation($numericAgg);
-        $query->addAggregation($stringAgg);
-        $query->addAggregation($dateAgg);
-
-        foreach ($this->_filter as $filter){
-            $this->_query->addMust($filter);
-        }
-
-        $query->setQuery($this->_query);
-        $query->setSize(10000);
-
-        $indexName = $this->getIndexName();
-
-        $connection = $this->getConnection();
-        $result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
-
-        $this->addFacetsToCollection($result['aggregations'], 'facets_numeric');
-        $this->addFacetsToCollection($result['aggregations'], 'facets_string');
-        $this->addFacetsToCollection($result['aggregations'], 'facets_date');
-
         return $this->facetCollection;
     }
 
@@ -322,6 +307,48 @@ class Query
      */
     public function load()
     {
+
+        $numericAgg = $this->getNumericFacets();
+        $stringAgg = $this->getStringFacets();
+        $dateAgg = $this->getDateFacets();
+
+        $query = new \Elastica\Query();
+        $query->addAggregation($numericAgg);
+        $query->addAggregation($stringAgg);
+        $query->addAggregation($dateAgg);
+
+        foreach ($this->_filter as $filter){
+            $this->_query->addMust($filter);
+        }
+
+        $query->setQuery($this->_query);
+        $query->setSize($this->_limit);
+        $query->setFrom($this->_offset);
+
+        $indexName = $this->getIndexName();
+
+        $connection = $this->getConnection();
+        $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
+
+        $this->_prepareFacets();
+
         return true;
+    }
+
+    /**
+     * execute pre-built query
+     */
+    public function execute()
+    {
+        $this->load();
+    }
+
+    protected function _prepareFacets()
+    {
+        try {
+            $this->addFacetsToCollection($this->_result['aggregations'], 'facets_numeric');
+            $this->addFacetsToCollection($this->_result['aggregations'], 'facets_string');
+            $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
+        } catch (\Exception $e) {}
     }
 }
