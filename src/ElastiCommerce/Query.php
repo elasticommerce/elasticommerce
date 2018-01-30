@@ -186,6 +186,14 @@ class Query
     }
 
     /**
+     * @return integer
+     */
+    public function getTotalHits()
+    {
+        return $this->_result['hits']['total'];
+    }
+
+    /**
      *
      * @throws \Exception
      */
@@ -295,7 +303,7 @@ class Query
      */
     public function addFieldToFilter($fieldName, $value)
     {
-        $filter = new \Elastica\Query\Match();
+        $filter = new \Elastica\Query\Term();
         $filter->setParam($fieldName, $value);
         $this->_filter[] = $filter;
 
@@ -351,4 +359,4 @@ class Query
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
         } catch (\Exception $e) {}
     }
-}
+};
