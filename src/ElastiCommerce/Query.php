@@ -383,20 +383,8 @@ class Query
 
         $indexName = $this->getIndexName();
 
-
-        #header('Content-Type: application/json');
-        #echo '<pre>';
-        #print_r(json_encode($query->toArray()));
-        #print_r(json_encode($this->_result));
-        #die();
-
         $connection = $this->getConnection();
         $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
-
-        #print_r(json_encode($this->_result));
-        #die();
-
-
 
         $this->_prepareFacets();
 
