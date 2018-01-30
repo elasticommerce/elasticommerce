@@ -1,4 +1,5 @@
 <?php
+
 namespace SmartDevs\ElastiCommerce;
 
 use Elastica\Aggregation\Nested;
@@ -165,6 +166,7 @@ class Query
     {
         $this->_offset = $offset;
     }
+
     /**
      * @return DataCollection
      * @throws \Exception
@@ -173,7 +175,7 @@ class Query
     {
 
         $resultCollection = new DataCollection();
-        foreach ($this->_result['hits']['hits'] as $entry){
+        foreach ($this->_result['hits']['hits'] as $entry) {
             $resultObject = new DataObject();
             $resultObject->addData($entry['_source']);
             $resultCollection->addItem($resultObject);
@@ -280,7 +282,7 @@ class Query
      */
     private function addFacetsToCollection($aggregations, $type)
     {
-        if(
+        if (
             array_key_exists($type, $aggregations)
             && array_key_exists('facet_name', $aggregations[$type])
             && array_key_exists('buckets', $aggregations[$type]['facet_name'])
@@ -298,10 +300,11 @@ class Query
      * @param $value
      * @return $this
      */
-    public function addCategoryFilter($fieldName, $value)
+    public function addCategoryFilter($value)
     {
+        $categoryDirect = 'category.direct';
         $filter = new Term();
-        $filter->setParam($fieldName, $value);
+        $filter->setParam($categoryDirect, $value);
         $this->_filter[] = $filter;
 
         return $this;
@@ -332,10 +335,10 @@ class Query
         $boolQuery = new BoolQuery();
 
         $valueQuery = new Term();
-        $valueQuery->setParam($path.'.value', (integer)$value);
+        $valueQuery->setParam($path . '.value', (integer)$value);
 
         $fieldQuery = new Term();
-        $fieldQuery->setParam($path.'.name', (string)$fieldName);
+        $fieldQuery->setParam($path . '.name', (string)$fieldName);
 
         $boolQuery->addMust($fieldQuery);
         $boolQuery->addMust($valueQuery);
@@ -364,7 +367,7 @@ class Query
     {
         $query = new \Elastica\Query();
 
-        foreach ($this->_filter as $filter){
+        foreach ($this->_filter as $filter) {
             $this->_query->addMust($filter);
         }
 
@@ -379,12 +382,22 @@ class Query
         $query->setQuery($this->_query);
         $query->setSize($this->_limit);
         $query->setFrom($this->_offset);
-        $query->setExplain(true);
 
         $indexName = $this->getIndexName();
 
+
+        #header('Content-Type: application/json');
+        #echo '<pre>';
+        #print_r(json_encode($query->toArray()));
+        #print_r(json_encode($this->_result));
+        #die();
+
         $connection = $this->getConnection();
         $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
+
+        #print_r(json_encode($this->_result));
+        #die();
+
 
         $this->_prepareFacets();
 
@@ -405,6 +418,9 @@ class Query
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_numeric');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_string');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
-};
+}
+
+;
