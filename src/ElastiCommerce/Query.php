@@ -4,11 +4,8 @@ namespace SmartDevs\ElastiCommerce;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
 use Elastica\Query\BoolQuery;
-use Elastica\Query\Match;
 use Elastica\Query\Term;
 use SmartDevs\ElastiCommerce\Common\Connection;
-use SmartDevs\ElastiCommerce\Common\Facet;
-use SmartDevs\ElastiCommerce\Common\Facet\Collection;
 use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Config\ServerConfig;
 use SmartDevs\ElastiCommerce\Util\Data\DataCollection;
@@ -303,7 +300,7 @@ class Query
      */
     public function addCategoryFilter($fieldName, $value)
     {
-        $filter = new \Elastica\Query\Term();
+        $filter = new Term();
         $filter->setParam($fieldName, $value);
         $this->_filter[] = $filter;
 
@@ -319,24 +316,45 @@ class Query
     {
         $filter = new \Elastica\Query\Nested();
 
-        if(is_int($value)) {
-            $filter->setPath('filter_numeric');
-            $boolQuery = new BoolQuery();
-
-            $valueQuery = new Term();
-            $valueQuery->setParam('filter_numeric.value', $value);
-
-            $fieldQuery = new Term();
-            $fieldQuery->setParam('filter_numeric.name', (string)$fieldName);
-
-            $boolQuery->addMust($fieldQuery);
-            $boolQuery->addMust($valueQuery);
-
-            $filter->setQuery($boolQuery);
-            $this->_filter[] = $filter;
+        switch (gettype($value)) {
+            case 'integer':
+                $path = 'filter_numeric';
+                break;
+            case 'date':
+                $path = 'filter_date';
+                break;
+            default:
+                $path = 'filter_string';
+                break;
         }
 
+        $filter->setPath($path);
+        $boolQuery = new BoolQuery();
+
+        $valueQuery = new Term();
+        $valueQuery->setParam($path.'.value', (integer)$value);
+
+        $fieldQuery = new Term();
+        $fieldQuery->setParam($path.'.name', (string)$fieldName);
+
+        $boolQuery->addMust($fieldQuery);
+        $boolQuery->addMust($valueQuery);
+
+        $filter->setQuery($boolQuery);
+        $this->_filter[] = $filter;
+
         return $this;
+    }
+
+    public function addVisibilityFilter()
+    {
+
+    }
+
+
+    public function addStatusFilter()
+    {
+
     }
 
     /**
