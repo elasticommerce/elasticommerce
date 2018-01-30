@@ -1,0 +1,43 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "category.direct": 6
+          }
+        },
+        {
+          "nested": {
+            "path": "filter-numeric",
+            "score_mode": "none",
+            "query": {
+              "bool": {
+                "filter": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "filter-numeric.name": "manufacturer"
+                          }
+                        },
+                        {
+                          "terms": {
+                            "filter-numeric.manufacturer": [
+                              10
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+      ]
+    }
+  }
+}

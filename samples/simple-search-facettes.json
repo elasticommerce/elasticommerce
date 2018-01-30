@@ -4,13 +4,8 @@
       "result.*"
     ]
   },
-  "sort": [
-    {
-      "sort-string.name": {
-        "order": "asc"
-      }
-    }
-  ],
+  "sort": [],
+  "size": 0,
   "query": {
     "bool": {
       "must": [
@@ -55,12 +50,12 @@
   "aggregations": {
     "agg_numeric": {
       "nested": {
-        "path": "filter-numeric"
+        "path": "filter_numeric"
       },
       "aggs": {
         "facet_name": {
           "terms": {
-            "field": "filter-numeric.name",
+            "field": "filter_numeric.name",
             "exclude": [
               "anchors",
               "categories",
@@ -71,11 +66,18 @@
           "aggs": {
             "facet_value": {
               "terms": {
-                "field": "filter-numeric.value"
+                "field": "filter_numeric.value"
               }
             }
           }
         }
+      }
+    },
+    "prices": {
+      "histogram": {
+        "field": "price.final_price_customer_group_0",
+        "interval": 10,
+        "min_doc_count" : 1
       }
     }
   }

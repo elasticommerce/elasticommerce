@@ -24,6 +24,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     const FILTER_STRING = 'filter_string';
     const FILTER_NUMBER = 'filter_numeric';
     const FILTER_DATE = 'filter_date';
+    const FILTER_PRICE = 'filter_price';
 
     const VISIBILITY = 'visibility';
     const STATUS = 'status';
@@ -147,6 +148,17 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     }
 
     /**
+     * add price value for filtering based on customer group
+     *
+     * @param $key
+     * @param $value
+     */
+    public function addPrice($name, $value)
+    {
+        $this->data['price'][$name] = $value;
+    }
+
+    /**
      * add numeric value for filtering
      *
      * @param $key
@@ -197,6 +209,16 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     public function setAnchors($value)
     {
         $this->data['category']['anchors'] = $value;
+    }
+
+    public function setStock(bool $status, float $qty)
+    {
+        $this->data['stock'] = ['status' => (bool)$status, 'qty' => $qty];
+    }
+
+    public function setPriceForCustomerGroup($id, array $data)
+    {
+        $this->data['price_customer_group_' . $id] = array_map('floatval', $data);
     }
 
     /**
