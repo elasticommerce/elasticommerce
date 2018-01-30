@@ -303,7 +303,7 @@ class Query
      */
     public function addCategoryFilter($fieldName, $value)
     {
-        $filter = new \Elastica\Query\Match();
+        $filter = new \Elastica\Query\Term();
         $filter->setParam($fieldName, $value);
         $this->_filter[] = $filter;
 
@@ -344,34 +344,40 @@ class Query
      */
     public function load()
     {
-
-        $numericAgg = $this->getNumericFacets();
-        $stringAgg = $this->getStringFacets();
-        $dateAgg = $this->getDateFacets();
-
         $query = new \Elastica\Query();
-        $query->addAggregation($numericAgg);
-        $query->addAggregation($stringAgg);
-        $query->addAggregation($dateAgg);
 
         foreach ($this->_filter as $filter){
             $this->_query->addMust($filter);
         }
 
+        $numericAgg = $this->getNumericFacets();
+        $stringAgg = $this->getStringFacets();
+        $dateAgg = $this->getDateFacets();
+
+        $query->addAggregation($numericAgg);
+        $query->addAggregation($stringAgg);
+        $query->addAggregation($dateAgg);
+
         $query->setQuery($this->_query);
         $query->setSize($this->_limit);
         $query->setFrom($this->_offset);
+        $query->setExplain(true);
 
         $indexName = $this->getIndexName();
+
+
+        #header('Content-Type: application/json');
+        #echo '<pre>';
+        #print_r(json_encode($query->toArray()));
+        #print_r(json_encode($this->_result));
+        #die();
 
         $connection = $this->getConnection();
         $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
 
-        header('Content-Type: application/json');
-        #echo '<pre>';
-        #print_r(json_encode($query->toArray()));
-        print_r(json_encode($this->_result));
-        die();
+        #print_r(json_encode($this->_result));
+        #die();
+
 
 
         $this->_prepareFacets();
