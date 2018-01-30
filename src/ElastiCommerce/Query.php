@@ -301,11 +301,40 @@ class Query
      * @param $value
      * @return $this
      */
-    public function addFieldToFilter($fieldName, $value)
+    public function addCategoryFilter($fieldName, $value)
     {
-        $filter = new \Elastica\Query\Term();
+        $filter = new \Elastica\Query\Match();
         $filter->setParam($fieldName, $value);
         $this->_filter[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @param $fieldName
+     * @param $value
+     * @return $this
+     */
+    public function addFieldToFilter($fieldName, $value)
+    {
+        $filter = new \Elastica\Query\Nested();
+
+        if(is_int($value)) {
+            $filter->setPath('filter_numeric');
+            $boolQuery = new BoolQuery();
+
+            $valueQuery = new Term();
+            $valueQuery->setParam('filter_numeric.value', $value);
+
+            $fieldQuery = new Term();
+            $fieldQuery->setParam('filter_numeric.name', (string)$fieldName);
+
+            $boolQuery->addMust($fieldQuery);
+            $boolQuery->addMust($valueQuery);
+
+            $filter->setQuery($boolQuery);
+            $this->_filter[] = $filter;
+        }
 
         return $this;
     }
@@ -337,6 +366,13 @@ class Query
 
         $connection = $this->getConnection();
         $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
+
+        header('Content-Type: application/json');
+        #echo '<pre>';
+        #print_r(json_encode($query->toArray()));
+        print_r(json_encode($this->_result));
+        die();
+
 
         $this->_prepareFacets();
 
