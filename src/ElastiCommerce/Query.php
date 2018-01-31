@@ -264,14 +264,16 @@ class Query
 
     /**
      * @param $rawFacet
-     * @return Facet
+     * @return DataObject
      */
     private function createFacet($rawFacet): DataObject
     {
         $facet = new DataObject();
+        $facet->setId($rawFacet['key']);
         $facet->setCode($rawFacet['key']);
         $facet->setDocCount($rawFacet['doc_count']);
         $facet->setValues($rawFacet['facet_value']['buckets']);
+
         return $facet;
     }
 
@@ -290,7 +292,9 @@ class Query
         ) {
             foreach ($aggregations[$type]['facet_name']['buckets'] as $rawFacet) {
                 $facet = $this->createFacet($rawFacet);
-                $this->facetCollection->addItem($facet);
+                if($this->facetCollection->getItemById($facet->getId()) == null) {
+                    $this->facetCollection->addItem($facet);
+                }
             }
         }
     }
@@ -422,5 +426,3 @@ class Query
         }
     }
 }
-
-;
