@@ -75,6 +75,11 @@ class Query
     private $_offset = 0;
 
     /**
+     * @var array
+     */
+    private $_sort = [];
+
+    /**
      * Indexer constructor.
      *
      * @param ServerConfig $serverConfig
@@ -375,6 +380,8 @@ class Query
             $this->_query->addMust($filter);
         }
 
+        $query->setSort($this->_sort);
+
         $numericAgg = $this->getNumericFacets();
         $stringAgg = $this->getStringFacets();
         $dateAgg = $this->getDateFacets();
@@ -416,13 +423,33 @@ class Query
         $this->load();
     }
 
+    /**
+     *
+     */
     protected function _prepareFacets()
     {
         try {
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_numeric');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_string');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
-        } catch (\Exception $e) {
-        }
+        } catch (\Exception $e) {}
+    }
+
+    /**
+     * @param $field
+     * @param string $direction
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function addOrder($field, $direction = 'asc', $type = 'sort_string' )
+    {
+        $this->_sort[] = [
+            $type . '.' . $field => [
+                'order' => $direction
+            ]
+        ];
+
+        return $this;
     }
 }
