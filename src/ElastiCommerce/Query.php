@@ -6,6 +6,7 @@ use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Term;
+use Elastica\Query\Terms as TermsQuery;
 use SmartDevs\ElastiCommerce\Common\Connection;
 use SmartDevs\ElastiCommerce\Config\IndexConfig;
 use SmartDevs\ElastiCommerce\Config\ServerConfig;
@@ -358,15 +359,24 @@ class Query
         return $this;
     }
 
-    public function addVisibilityFilter()
+    /**
+     * @param array $visibility
+     */
+    public function addVisibilityFilter($visibility = [2,4])
     {
+        $termsQuery = new TermsQuery('visibility', $visibility);
 
+        $this->_filter[] = $termsQuery;
     }
 
-
-    public function addStatusFilter()
+    /**
+     * @param int $status
+     */
+    public function addStatusFilter($status = 1)
     {
+        $termQuery = new Term(['status' => $status]);
 
+        $this->_filter[] = $termQuery;
     }
 
     /**
