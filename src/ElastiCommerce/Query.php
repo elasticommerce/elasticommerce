@@ -298,7 +298,7 @@ class Query
         ) {
             foreach ($aggregations[$type]['facet_name']['buckets'] as $rawFacet) {
                 $facet = $this->createFacet($rawFacet);
-                if($this->facetCollection->getItemById($facet->getId()) == null) {
+                if ($this->facetCollection->getItemById($facet->getId()) == null) {
                     $this->facetCollection->addItem($facet);
                 }
             }
@@ -362,7 +362,7 @@ class Query
     /**
      * @param array $visibility
      */
-    public function addVisibilityFilter($visibility = [2,4])
+    public function addVisibilityFilter($visibility = [2, 4])
     {
         $termsQuery = new TermsQuery('visibility', $visibility);
 
@@ -442,7 +442,8 @@ class Query
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_numeric');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_string');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
 
     /**
@@ -452,7 +453,7 @@ class Query
      *
      * @return $this
      */
-    public function addOrder($field, $direction = 'asc', $type = 'sort_string' )
+    public function addOrder($field, $direction = 'asc', $type = 'sort_string')
     {
         $this->_sort[] = [
             $type . '.' . $field => [
@@ -461,5 +462,94 @@ class Query
         ];
 
         return $this;
+    }
+
+    /**
+     * @param $queryString
+     * @param array $attributSetFilter
+     * @return array
+     */
+    public function suggest($queryString, $attributSetFilter = [])
+    {
+        $indexName = $this->getIndexName();
+
+        $filter = [];
+        foreach ($attributSetFilter as $attributeId){
+            $filter[] = [
+                'term' => [
+                    'attribute_set_id' => $attributeId
+                ]
+            ];
+        }
+
+        $body = json_encode(
+            [
+                "_source" => [
+                    "includes" => [
+                        "result.name",
+                        "result.url_path"
+                    ]
+                ],
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            'bool' => [
+                                'must' => [
+                                    [
+                                        'terms' => [
+                                            'visibility' => [
+                                                2, 4
+                                            ]
+                                        ],
+                                    ],
+                                ],
+                            ]
+                        ],
+                        'must' => [
+                            'multi_match' => [
+                                'fields' => [
+                                    'fulltext',
+                                    'completion',
+                                    'fulltext_boosted'
+                                ],
+                                'operator' => 'OR',
+                                'type' => 'cross_fields',
+                                'query' => "$queryString"
+                            ],
+                        ],
+
+                    ],
+                ],
+                /*'suggest' => [
+                    'completion' => [
+                        'text' => "$queryString",
+                        'term' => [
+                            'field' => 'completion'
+                        ]
+                    ],
+                    'fulltext' => [
+                        'text' => "$queryString",
+                        'term' => [
+                            'field' => 'fulltext'
+                        ]
+                    ],
+                    'fulltext_boosted' => [
+                        'text' => "$queryString",
+                        'term' => [
+                            'field' => 'fulltext_boosted'
+                        ]
+                    ]
+                ]*/
+            ]
+        );
+        #header('Content-Type: application/json');
+        #print_r($body);
+        #die();
+        return $this->getConnection()->search(
+            [
+                'index' => $indexName,
+                'body' => $body
+            ]
+        );
     }
 }
