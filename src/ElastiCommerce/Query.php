@@ -542,9 +542,7 @@ class Query
                 ]*/
             ]
         );
-        #header('Content-Type: application/json');
-        #print_r($body);
-        #die();
+
         return $this->getConnection()->search(
             [
                 'index' => $indexName,
