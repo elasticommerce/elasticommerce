@@ -26,6 +26,11 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     const FILTER_DATE = 'filter_date';
     const FILTER_PRICE = 'filter_price';
 
+    const CATEGORY_DIRECT = 'category_direct';
+    const CATEGORY_ANCHORS = 'category_anchors';
+
+    const VARIANTS = 'variants';
+
     const VISIBILITY = 'visibility';
     const STATUS = 'status';
 
@@ -69,14 +74,17 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
         $this->docId = $docId;
         $this->docType = $docType;
         $this->action = $action;
-        $this->data = [
+        $this->_data = [
             self::RESULT => [],
             self::SORT_STRING => [],
             self::SORT_NUMBER => [],
             self::SORT_DATE => [],
             self::FILTER_STRING => [],
             self::FILTER_NUMBER => [],
-            self::FILTER_DATE => []
+            self::FILTER_DATE => [],
+            self::CATEGORY_DIRECT => [],
+            self::CATEGORY_ANCHORS => [],
+            self::VARIANTS => []
         ];
     }
 
@@ -101,13 +109,13 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
     }
 
     /**
-     * set result data
+     * add result data
      *
      * @param array $data
      */
     public function addResultData(array $data)
     {
-        $this->data[self::RESULT] += $data;
+        $this->_data[self::RESULT] += $data;
     }
 
     /**
@@ -117,22 +125,41 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function setResultData(array $data)
     {
-        $this->data[self::RESULT] = $data;
+        $this->_data[self::RESULT] = $data;
     }
 
+    /**
+     * adds string sort data
+     *
+     * @param $key
+     * @param $value
+     */
     public function addSortString($key, $value)
     {
-        $this->data[self::SORT_STRING][$key] = $value;
+        $this->_data[self::SORT_STRING][$key] = $value;
     }
 
+    /**
+     * add numeric sort data
+     *
+     * @param $key
+     * @param $value
+     */
     public function addSortNumeric($key, $value)
     {
-        $this->data[self::SORT_NUMBER][$key] = $value;
+        $this->_data[self::SORT_NUMBER][$key] = $value;
     }
 
+    /**
+     * add date sort data
+     *
+     * @param $key
+     * @param $value
+     *
+     */
     public function addSortDate($key, $value)
     {
-        $this->data[self::SORT_DATE][$key] = $value;
+        $this->_data[self::SORT_DATE][$key] = $value;
     }
 
     /**
@@ -143,18 +170,13 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilterString($name, $value)
     {
-        $this->data[self::FILTER_STRING][] = ['name' => $name, 'value' => $value];
-    }
-
-    /**
-     * add price value for filtering based on customer group
-     *
-     * @param $key
-     * @param $value
-     */
-    public function addPrice($name, $value)
-    {
-        $this->data['price'][$name] = $value;
+        $value = is_array($value) ? $value : [$value];
+        if (true === array_key_exists($name, $this->_data[self::FILTER_STRING])) {
+            $data = ['name' => $name, 'value' => array_unique(array_merge($this->_data[self::FILTER_STRING][$name]['value'], $value))];
+        } else {
+            $data = ['name' => $name, 'value' => $value];
+        }
+        $this->_data[self::FILTER_STRING][$name] = $data;
     }
 
     /**
@@ -165,7 +187,29 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilterNumeric($name, $value)
     {
-        $this->data[self::FILTER_NUMBER][] = ['name' => $name, 'value' => $value];
+        $value = is_array($value) ? $value : [$value];
+        if (true === array_key_exists($name, $this->_data[self::FILTER_NUMBER])) {
+            $data = ['name' => $name, 'value' => array_unique(array_merge($this->_data[self::FILTER_NUMBER][$name]['value'], $value))];
+        } else {
+            $data = ['name' => $name, 'value' => $value];
+        }
+        $this->_data[self::FILTER_NUMBER][$name] = $data;
+    }
+
+    /**
+     * add price value for filtering based on customer group
+     *
+     * @param $key
+     * @param $value
+     */
+    public function addPrice($name, $value)
+    {
+        $this->_data['price'][$name] = $value;
+    }
+
+    public function addVariant(array $variant)
+    {
+        $this->_data[self::VARIANTS][] = $variant;
     }
 
     /**
@@ -176,7 +220,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function addFilterDate($name, $value)
     {
-        $this->data[self::FILTER_DATE][] = ['name' => $name, 'value' => $value];
+        $this->_data[self::FILTER_DATE][] = ['name' => $name, 'value' => $value];
     }
 
     /**
@@ -186,7 +230,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function setVisibility(int $value)
     {
-        $this->data[self::VISIBILITY] = $value;
+        $this->_data[self::VISIBILITY] = $value;
     }
 
     /**
@@ -196,27 +240,37 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function setStatus(int $value)
     {
-        $this->data[self::STATUS] = $value;
+        $this->_data[self::STATUS] = $value;
     }
 
-    public function setCategories($value)
+    /**
+     * set product categories
+     *
+     * @param array $value
+     */
+    public function setCategories(array $value)
     {
-        $this->data['category']['direct'] = $value;
+        $this->_data[self::CATEGORY_DIRECT] = array_unique(array_merge($this->_data[self::CATEGORY_DIRECT], array_map('intval', $value)));
     }
 
-    public function setAnchors($value)
+    /**
+     * set product subcategories
+     *
+     * @param $value
+     */
+    public function setAnchors(array $value)
     {
-        $this->data['category']['anchors'] = $value;
+        $this->_data[self::CATEGORY_ANCHORS] = array_unique(array_merge($this->_data[self::CATEGORY_ANCHORS], array_map('intval', $value)));
     }
 
     public function setStock(bool $status, float $qty)
     {
-        $this->data['stock'] = ['status' => (bool)$status, 'qty' => $qty];
+        $this->_data['stock'] = ['status' => (bool)$status, 'qty' => $qty];
     }
 
     public function setPriceForCustomerGroup($id, array $data)
     {
-        $this->data['price_customer_group_' . $id] = array_map('floatval', $data);
+        $this->_data['price_customer_group_' . $id] = array_map('floatval', $data);
     }
 
     /**
@@ -227,7 +281,7 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      */
     public function getBulkArray(string $index)
     {
-        $return = array();
+        $return = [];
         $return[] = [
             'index' => [
                 '_index' => $index,
@@ -235,7 +289,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
                 '_id' => $this->docId,
             ]
         ];
-        $return[] = $this->data;
+        $return[] = $this->_data;
+        $return[1][self::FILTER_NUMBER] = array_values($this->_data[self::FILTER_NUMBER]);
+        $return[1][self::FILTER_STRING] = array_values($this->_data[self::FILTER_STRING]);
         return $return;
     }
 }
