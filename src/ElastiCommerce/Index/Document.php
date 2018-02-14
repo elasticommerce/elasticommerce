@@ -202,9 +202,9 @@ class Document extends \SmartDevs\ElastiCommerce\Util\Data\DataObject
      * @param $key
      * @param $value
      */
-    public function addPrice($name, $value)
+    public function addPrice(array $values)
     {
-        $this->_data['price'][$name] = $value;
+        $this->_data['price'] = $values;
     }
 
     public function addVariant(array $variant)
