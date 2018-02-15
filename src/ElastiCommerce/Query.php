@@ -380,6 +380,39 @@ class Query
     }
 
     /**
+     * addRangeFilter
+     *
+     * @param string $fieldName
+     * @param $min
+     * @param $max
+     * @return $this
+     */
+    public function addRangeFilter($fieldName, $min, $max)
+    {
+        $filter = new \Elastica\Query\Nested();
+
+        switch (gettype($value)) {
+            case 'integer':
+                $path = 'filter_numeric';
+                break;
+            case 'date':
+                $path = 'filter_date';
+                break;
+            default:
+                $path = 'filter_string';
+                break;
+        }
+
+        $filter->setPath($path);
+        $rangeFilter = new \Elastica\Query\Range();
+        $rangeFilter->addField($path.'.value',[ 'from' => $min, 'to' => $max]);
+        $filter->setQuery($rangeFilter);
+        $this->_filter[] = $filter;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function load()
