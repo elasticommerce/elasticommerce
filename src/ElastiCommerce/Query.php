@@ -2,6 +2,7 @@
 
 namespace SmartDevs\ElastiCommerce;
 
+use Elastica\Aggregation\Histogram;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
 use Elastica\Query\BoolQuery;
@@ -79,6 +80,11 @@ class Query
      * @var array
      */
     private $_sort = [];
+
+    /**
+     * @var integer
+     */
+    private $_groupId = 0;
 
     /**
      * Indexer constructor.
@@ -171,6 +177,14 @@ class Query
     public function setOffset($offset)
     {
         $this->_offset = $offset;
+    }
+
+    /**
+     * @param $groupId
+     */
+    public function setGroupId($groupId)
+    {
+        $this->_groupId = $groupId;
     }
 
     /**
@@ -278,7 +292,9 @@ class Query
         $facet->setId($rawFacet['key']);
         $facet->setCode($rawFacet['key']);
         $facet->setDocCount($rawFacet['doc_count']);
-        $facet->setValues($rawFacet['facet_value']['buckets']);
+        if ($this->hasValues($rawFacet)) {
+            $facet->setValues($rawFacet['facet_value']['buckets']);
+        }
 
         return $facet;
     }
@@ -429,9 +445,13 @@ class Query
         $stringAgg = $this->getStringFacets();
         $dateAgg = $this->getDateFacets();
 
+        $priceAgg = $this->getPriceFacet($this->_groupId);
+
         $query->addAggregation($numericAgg);
         $query->addAggregation($stringAgg);
         $query->addAggregation($dateAgg);
+        $query->addAggregation($priceAgg);
+
 
         $query->setQuery($this->_query);
         $query->setSize($this->_limit);
@@ -475,6 +495,7 @@ class Query
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_numeric');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_string');
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
+            $this->addPriceFacetsToCollection($this->_result['aggregations'], 'price');
         } catch (\Exception $e) {
         }
     }
@@ -507,35 +528,36 @@ class Query
         $indexName = $this->getIndexName();
 
         $filter = [];
-        foreach ($attributSetFilter as $attributeId){
+        foreach ($attributSetFilter as $attributeId) {
             $filter[] = [
                 'term' => [
                     'attribute_set_id' => $attributeId
                 ]
-            ];
+                ]
+            ;
         }
+        $filter[] = [
+            'terms' => [
+                'visibility' => [
+                    2, 4
+                ]
+            ],
+        ];
 
         $body = json_encode(
             [
                 "_source" => [
                     "includes" => [
                         "result.name",
-                        "result.url_path"
+                        "result.url_path",
+                        "result.attribute_set_id"
                     ]
                 ],
                 'query' => [
                     'bool' => [
                         'filter' => [
                             'bool' => [
-                                'must' => [
-                                    [
-                                        'terms' => [
-                                            'visibility' => [
-                                                2, 4
-                                            ]
-                                        ],
-                                    ],
-                                ],
+                                'must' => $filter,
                             ]
                         ],
                         'must' => [
@@ -550,7 +572,6 @@ class Query
                                 'query' => "$queryString"
                             ],
                         ],
-
                     ],
                 ],
                 /*'suggest' => [
@@ -576,11 +597,68 @@ class Query
             ]
         );
 
-        return $this->getConnection()->search(
+
+        $result = $this->getConnection()->search(
             [
                 'index' => $indexName,
                 'body' => $body
             ]
         );
+
+        header('Content-Type: application/json');
+        #print_r($body);
+        print_r(json_encode($result));
+        die();
+
+        return $result;
+    }
+
+    /**
+     * @param int $customerGroupId
+     * @param int $interval
+     * @return Histogram
+     */
+    private function getPriceFacet($customerGroupId = 0, $interval = 10)
+    {
+        $priceAgg = new Histogram(
+            'price',
+            'price.final_price_customer_group_' . $customerGroupId,
+            $interval
+        );
+        $priceAgg->setMinimumDocumentCount(1);
+
+        return $priceAgg;
+    }
+
+    /**
+     * @param $aggregations
+     * @param $type
+     * @throws \Exception
+     */
+    private function addPriceFacetsToCollection($aggregations, $type)
+    {
+        $facet = new DataObject();
+        $facet->setId($type);
+        $facet->setCode($type);
+        $facet->setDocCount(0);
+        if (
+            array_key_exists($type, $aggregations)
+            && array_key_exists('buckets', $aggregations[$type])
+        ) {
+            $facet->setValues($aggregations[$type]['buckets']);
+        }
+
+        if ($this->facetCollection->getItemById($facet->getId()) == null) {
+            $this->facetCollection->addItem($facet);
+        }
+    }
+
+    /**
+     * @param $rawFacet
+     * @return bool
+     */
+    private function hasValues($rawFacet)
+    {
+        return array_key_exists('facet_value', $rawFacet) && array_key_exists('buckets', $rawFacet['facet_value']);
     }
 }
