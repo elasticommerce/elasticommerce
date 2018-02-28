@@ -22,6 +22,7 @@ class TokenFilterCollection extends AbstractCollection
         'stop' => TokenFilter\StopTokenFilter::class,
         'snowball' => TokenFilter\SnowballTokenFilter::class,
         TokenFilter\EdgeNgramTokenFilter::TYPE => TokenFilter\EdgeNgramTokenFilter::class,
-        TokenFilter\ShingleTokenFilter::TYPE => TokenFilter\ShingleTokenFilter::class
+        TokenFilter\ShingleTokenFilter::TYPE => TokenFilter\ShingleTokenFilter::class,
+        TokenFilter\SynonymTokenFilter::TYPE => TokenFilter\SynonymTokenFilter::class
     ];
 }
