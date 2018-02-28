@@ -328,7 +328,7 @@ class Query
      */
     public function addCategoryFilter($value)
     {
-        $categoryDirect = 'category.direct';
+        $categoryDirect = 'category_direct';
         $filter = new Term();
         $filter->setParam($categoryDirect, $value);
         $this->_filter[] = $filter;
