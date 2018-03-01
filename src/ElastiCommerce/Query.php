@@ -390,7 +390,7 @@ class Query
      */
     public function addStatusFilter($status = 1)
     {
-        $termQuery = new Term(['status' => $status]);
+        $termQuery = new Term(['stock_status' => $status]);
 
         $this->_filter[] = $termQuery;
     }
