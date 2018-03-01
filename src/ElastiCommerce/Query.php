@@ -407,7 +407,7 @@ class Query
     {
         $filter = new \Elastica\Query\Nested();
 
-        switch (gettype($value)) {
+        switch (gettype($min)) {
             case 'integer':
                 $path = 'filter_numeric';
                 break;
