@@ -6,6 +6,7 @@ use Elastica\Aggregation\Histogram;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
 use Elastica\Query\BoolQuery;
+use Elastica\Query\MultiMatch;
 use Elastica\Query\Term;
 use Elastica\Query\Terms as TermsQuery;
 use SmartDevs\ElastiCommerce\Common\Connection;
@@ -514,6 +515,25 @@ class Query
                 'order' => $direction
             ]
         ];
+
+        return $this;
+    }
+
+    /**
+     * setQueryString
+     *
+     * @param string $queryString
+     * @return $this
+     */
+    public function setQueryString($queryString)
+    {
+        $multiMatch = new MultiMatch();
+        $multiMatch->setFields(['fulltext', 'completion', 'fulltext_boosted']);
+        $multiMatch->setOperator('OR');
+        $multiMatch->setType('cross_fields');
+        $multiMatch->setQuery($queryString);
+
+        $this->_filter[] = $multiMatch;
 
         return $this;
     }
