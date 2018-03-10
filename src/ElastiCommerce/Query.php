@@ -622,7 +622,7 @@ class Query
     {
         $priceAgg = new Histogram(
             'price',
-            'price.final_price_customer_group_' . $customerGroupId,
+            'price.final_price',
             $interval
         );
         $priceAgg->setMinimumDocumentCount(1);
