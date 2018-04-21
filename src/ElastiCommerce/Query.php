@@ -635,7 +635,7 @@ class Query
      * @param int $interval
      * @return Histogram
      */
-    private function getPriceFacet($customerGroupId = 0, $interval = 10)
+    private function getPriceFacet($customerGroupId = 0, $interval = 1)
     {
         $priceAgg = new Histogram(
             'price',
