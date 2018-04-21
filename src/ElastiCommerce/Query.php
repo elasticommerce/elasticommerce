@@ -422,9 +422,17 @@ class Query
 
         $filter->setPath($path);
         $rangeFilter = new \Elastica\Query\Range();
-        $rangeFilter->addField($path.'.value',[ 'from' => $min, 'to' => $max]);
+        $rangeFilter->addField($path . '.value', ['from' => $min, 'to' => $max]);
         $filter->setQuery($rangeFilter);
         $this->_filter[] = $filter;
+
+        return $this;
+    }
+
+    public function addPriceFilter($min, $max)
+    {
+        $rangeFilter = new \Elastica\Query\Range('price.final_price', ['from' => $min, 'to' => $max]);
+        $this->_filter[] = $rangeFilter;
 
         return $this;
     }
@@ -548,24 +556,22 @@ class Query
         $indexName = $this->getIndexName();
 
         $filter = [];
-        foreach ($attributSetFilter as $attributeId) {
-            $filter[] = [
-                'term' => [
-                    'attribute_set_id' => $attributeId
-                ]
-                ]
-            ;
-        }
+        #foreach ($attributSetFilter as $attributeId) {
+        #    $filter[] = [
+        #        'terms' => [
+        #            'attribute_set_id' => $attributSetFilter
+        #        ]
+        #    ];
+        #}
         $filter[] = [
             'terms' => [
                 'visibility' => [
-                    2, 4
+                    "2", "4"
                 ]
             ],
         ];
 
-        $body = json_encode(
-            [
+        $body = [
                 "_source" => [
                     "includes" => [
                         "result.name",
@@ -575,60 +581,51 @@ class Query
                 ],
                 'query' => [
                     'bool' => [
-                        'filter' => [
-                            'bool' => [
-                                'must' => $filter,
-                            ]
-                        ],
+                        'filter' => $filter,
                         'must' => [
-                            'multi_match' => [
-                                'fields' => [
-                                    'fulltext',
-                                    'completion',
-                                    'fulltext_boosted'
-                                ],
-                                'operator' => 'OR',
-                                'type' => 'cross_fields',
-                                'query' => "$queryString"
-                            ],
                         ],
                     ],
                 ],
-                /*'suggest' => [
+                'suggest' => [
                     'completion' => [
                         'text' => "$queryString",
-                        'term' => [
-                            'field' => 'completion'
+                        'completion' => [
+                            'field' => 'completion',
                         ]
                     ],
-                    'fulltext' => [
+                    'suggestion' => [
                         'text' => "$queryString",
-                        'term' => [
-                            'field' => 'fulltext'
-                        ]
-                    ],
-                    'fulltext_boosted' => [
-                        'text' => "$queryString",
-                        'term' => [
-                            'field' => 'fulltext_boosted'
+                        'completion' => [
+                            'field' => 'suggestion'
                         ]
                     ]
-                ]*/
+                ]
             ]
-        );
+        ;
 
+        foreach (explode(' ', $queryString) as $string) {
+            $body['query']['bool']['must'][] = [
+                'multi_match' => [
+                    'fields' => [
+                        'name',
+                        'fulltext',
+                        'fulltext_boosted'
+                    ],
+                    'operator' => 'OR',
+                    'type' => 'best_fields',
+                    'query' => "$string",
+                    'fuzziness' => 'AUTO',
+                    "zero_terms_query"=> "all"
+                ],
+            ];
+        }
 
         $result = $this->getConnection()->search(
             [
                 'index' => $indexName,
-                'body' => $body
+                'body' => json_encode($body)
             ]
         );
-
-        header('Content-Type: application/json');
-        #print_r($body);
-        print_r(json_encode($result));
-        die();
 
         return $result;
     }
