@@ -585,20 +585,6 @@ class Query
                         'must' => [
                         ],
                     ],
-                ],
-                'suggest' => [
-                    'completion' => [
-                        'text' => "$queryString",
-                        'completion' => [
-                            'field' => 'completion',
-                        ]
-                    ],
-                    'suggestion' => [
-                        'text' => "$queryString",
-                        'completion' => [
-                            'field' => 'suggestion'
-                        ]
-                    ]
                 ]
             ]
         ;
