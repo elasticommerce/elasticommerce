@@ -247,12 +247,12 @@ class Query
 
 
         $rearrangedFilter = [];
-        foreach ($filter['bool']['must'] as $entry)
-        {
-            $rearrangedFilter[] = $entry;
-            break;
-        }
 
+        if(is_iterable($filter['bool'])) {
+            foreach ($filter['bool']['must'] as $entry) {
+                $rearrangedFilter[] = $entry;
+            }
+        }
         $globalNumericAgg = [
             'filter' => $filter,
             'aggs' => [
@@ -583,6 +583,9 @@ class Query
         $query->setQuery($this->_query);
         $query->setSize($this->_limit);
         $query->setFrom($this->_offset);
+
+        $querry['size'] = $this->_limit;
+        $querry['from'] = $this->_offset;
 
         $indexName = $this->getIndexName();
 
