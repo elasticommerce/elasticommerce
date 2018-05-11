@@ -2,6 +2,8 @@
 
 namespace SmartDevs\ElastiCommerce;
 
+use Elastica\Aggregation\Filter;
+use Elastica\Aggregation\GlobalAggregation;
 use Elastica\Aggregation\Histogram;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
@@ -225,7 +227,7 @@ class Query
     /**
      * @return Nested
      */
-    public function getNumericFacets(): Nested
+    public function getNumericFacets($filter)
     {
         $nameAgg = new Terms('facet_name');
         $nameAgg->setField('filter_numeric.name');
@@ -239,13 +241,52 @@ class Query
 
         $numericAgg = new Nested('facets_numeric', 'filter_numeric');
         $numericAgg->addAggregation($nameAgg);
-        return $numericAgg;
+
+        $globalNumericAgg = new GlobalAggregation('facets_numeric');
+        $globalNumericAgg->addAggregation($numericAgg);
+
+
+        $rearrangedFilter = [];
+        foreach ($filter['bool']['must'] as $entry)
+        {
+            $rearrangedFilter[] = $entry;
+            break;
+        }
+
+        $globalNumericAgg = [
+            'filter' => $filter,
+            'aggs' => [
+                'facets_numeric' => [
+                    'nested' => [
+                        'path' => 'filter_numeric',
+                    ],
+                    'aggs' => [
+                        'facet_name' => [
+                            'terms' => [
+                                'field' => 'filter_numeric.name',
+                                'size' => 10000
+                            ],
+                            'aggs' => [
+                                'facet_value' => [
+                                    'terms' => [
+                                        'field' => 'filter_numeric.value',
+                                        'size' => 10000
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return $globalNumericAgg;
     }
 
     /**
      * @return Nested
      */
-    private function getStringFacets()
+    private function getStringFacets($filter)
     {
         $nameAgg = new Terms('facet_name');
         $nameAgg->setField('filter_string.name');
@@ -260,13 +301,43 @@ class Query
         $stringAgg = new Nested('facets_string', 'filter_string');
         $stringAgg->addAggregation($nameAgg);
 
-        return $stringAgg;
+        $globalStringAgg = new GlobalAggregation('facets_string');
+        $globalStringAgg->addAggregation($stringAgg);
+
+        $globalStringAgg = [
+            'filter' => $filter,
+            'aggs' => [
+                'facets_string' => [
+                    'nested' => [
+                        'path' => 'filter_string'
+                    ],
+                    'aggs' => [
+                        'facet_name' => [
+                            'terms' => [
+                                'field' => 'filter_string.name',
+                                'size' => 10000
+                            ],
+                            'aggs' => [
+                                'facet_value' => [
+                                    'terms' => [
+                                        'field' => 'filter_string.value',
+                                        'size' => 10000
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return $globalStringAgg;
     }
 
     /**
      * @return Nested
      */
-    private function getDateFacets()
+    private function getDateFacets($filter)
     {
         $nameAgg = new Terms('facet_name');
         $nameAgg->setField('filter_date.name');
@@ -280,7 +351,38 @@ class Query
 
         $dateAgg = new Nested('facets_date', 'filter_date');
         $dateAgg->addAggregation($nameAgg);
-        return $dateAgg;
+
+        $globalDateAgg = new GlobalAggregation('facets_date');
+        $globalDateAgg->addAggregation($dateAgg);
+
+        $globalDateAgg = [
+            'filter' => $filter,
+            'aggs' => [
+                'facets_date' => [
+                    'nested' => [
+                        'path' => 'filter_date'
+                    ],
+                    'aggs' => [
+                        'facet_name' => [
+                            'terms' => [
+                                'field' => 'filter_date.name',
+                                'size' => 10000
+                            ],
+                            'aggs' => [
+                                'facet_value' => [
+                                    'terms' => [
+                                        'field' => 'filter_date.value',
+                                        'size' => 10000
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return $globalDateAgg;
     }
 
     /**
@@ -309,12 +411,13 @@ class Query
     {
         if (
             array_key_exists($type, $aggregations)
-            && array_key_exists('facet_name', $aggregations[$type])
-            && array_key_exists('buckets', $aggregations[$type]['facet_name'])
-            && is_array($aggregations[$type]['facet_name']['buckets'])
+            && array_key_exists('facet_name', $aggregations[$type][$type])
+            && array_key_exists('buckets', $aggregations[$type][$type]['facet_name'])
+            && is_array($aggregations[$type][$type]['facet_name']['buckets'])
         ) {
-            foreach ($aggregations[$type]['facet_name']['buckets'] as $rawFacet) {
+            foreach ($aggregations[$type][$type]['facet_name']['buckets'] as $rawFacet) {
                 $facet = $this->createFacet($rawFacet);
+
                 if ($this->facetCollection->getItemById($facet->getId()) == null) {
                     $this->facetCollection->addItem($facet);
                 }
@@ -442,25 +545,40 @@ class Query
      */
     public function load()
     {
+        header('Content-Type: application/json');
+
+
         $query = new \Elastica\Query();
+        $querry = [
+            'query' => []
+        ];
+
+        $querry['sort'] = $this->_sort;
 
         foreach ($this->_filter as $filter) {
             $this->_query->addMust($filter);
         }
 
+        $querry['query']['bool'] = $this->_query->toArray()['bool'];
+
         $query->setSort($this->_sort);
 
-        $numericAgg = $this->getNumericFacets();
-        $stringAgg = $this->getStringFacets();
-        $dateAgg = $this->getDateFacets();
+        $numericAgg = $this->getNumericFacets($querry['query']);
+        $stringAgg = $this->getStringFacets($querry['query']);
+        $dateAgg = $this->getDateFacets($querry['query']);
 
         $priceAgg = $this->getPriceFacet($this->_groupId);
 
-        $query->addAggregation($numericAgg);
-        $query->addAggregation($stringAgg);
-        $query->addAggregation($dateAgg);
-        $query->addAggregation($priceAgg);
+        $querry['aggs']['facets_numeric'] = $numericAgg;
+        #$querry['aggs']['filter'] = $querry['query'];
+        $querry['aggs']['facets_string'] = $stringAgg;
+        $querry['aggs']['facets_date'] = $dateAgg;
+        $querry['aggs']['price'] = $priceAgg;
 
+        #$query->addAggregation($numericAgg);
+        #$query->addAggregation($stringAgg);
+        #$query->addAggregation($dateAgg);
+        #$query->addAggregation($priceAgg);
 
         $query->setQuery($this->_query);
         $query->setSize($this->_limit);
@@ -469,14 +587,15 @@ class Query
         $indexName = $this->getIndexName();
 
 
-        #header('Content-Type: application/json');
         #echo '<pre>';
         #print_r(json_encode($query->toArray()));
+        #print_r(json_encode($querry));
         #print_r(json_encode($this->_result));
         #die();
 
+
         $connection = $this->getConnection();
-        $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($query->toArray())]);
+        $this->_result = $connection->search(['index' => $indexName, 'type' => 'product', 'body' => json_encode($querry)]);
 
         #print_r(json_encode($this->_result));
         #die();
@@ -506,6 +625,7 @@ class Query
             $this->addFacetsToCollection($this->_result['aggregations'], 'facets_date');
             $this->addPriceFacetsToCollection($this->_result['aggregations'], 'price');
         } catch (\Exception $e) {
+            // just do nothing...
         }
     }
 
@@ -572,22 +692,21 @@ class Query
         ];
 
         $body = [
-                "_source" => [
-                    "includes" => [
-                        "result.name",
-                        "result.url_path",
-                        "result.attribute_set_id"
-                    ]
-                ],
-                'query' => [
-                    'bool' => [
-                        'filter' => $filter,
-                        'must' => [
-                        ],
-                    ],
+            "_source" => [
+                "includes" => [
+                    "result.name",
+                    "result.url_path",
+                    "result.attribute_set_id"
                 ]
+            ],
+            'query' => [
+                'bool' => [
+                    'filter' => $filter,
+                    'must' => [
+                    ],
+                ],
             ]
-        ;
+        ];
 
         foreach (explode(' ', $queryString) as $string) {
             $body['query']['bool']['must'][] = [
@@ -601,7 +720,7 @@ class Query
                     'type' => 'best_fields',
                     'query' => "$string",
                     'fuzziness' => 'AUTO',
-                    "zero_terms_query"=> "all"
+                    "zero_terms_query" => "all"
                 ],
             ];
         }
@@ -630,6 +749,14 @@ class Query
         );
         $priceAgg->setMinimumDocumentCount(1);
 
+        $priceAgg = [
+            'histogram' => [
+                'field' => 'price.final_price',
+                'interval' => 1,
+                'min_doc_count' => 1
+            ]
+        ];
+
         return $priceAgg;
     }
 
@@ -644,6 +771,11 @@ class Query
         $facet->setId($type);
         $facet->setCode($type);
         $facet->setDocCount(0);
+
+        #echo '<pre>';
+        #print_r($aggregations['facets_numeric']['facets_numeric']);
+        #die();
+
         if (
             array_key_exists($type, $aggregations)
             && array_key_exists('buckets', $aggregations[$type])
