@@ -20,6 +20,15 @@ abstract class IndexConfig
     protected $numberOfReplicas = 1;
 
     /**
+     * totalFieldsLimit
+     *
+     * index.mapping.total_fields.limit
+     *
+     * @var int
+     */
+    protected $totalFieldsLimit = 10000;
+
+    /**
      * index language
      *
      * @var string
@@ -192,6 +201,27 @@ abstract class IndexConfig
     public function setNumberOfReplicas(int $numberOfReplicas): IndexConfig
     {
         $this->numberOfReplicas = $numberOfReplicas;
+        return $this;
+    }
+
+    /**
+     * getTotalFieldsLimit
+     * @return int
+     */
+    public function getTotalFieldsLimit(): int
+    {
+        return $this->totalFieldsLimit;
+    }
+
+    /**
+     * setTotalFieldsLimit
+     *
+     * @param int $totalFieldsLimit
+     * @return IndexConfig
+     */
+    public function setTotalFieldsLimit(int $totalFieldsLimit): IndexConfig
+    {
+        $this->totalFieldsLimit = $totalFieldsLimit;
         return $this;
     }
 
