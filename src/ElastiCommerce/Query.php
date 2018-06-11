@@ -659,8 +659,8 @@ class Query
     public function setQueryString($queryString)
     {
         $multiMatch = new MultiMatch();
-        $multiMatch->setFields(['name^2', 'sku^2', 'fulltext_boosted', 'fulltext', 'completion']);
-        $multiMatch->setOperator('OR');
+        $multiMatch->setFields(['name^2', 'sku', 'short_description^2', 'fulltext_boosted', 'fulltext', 'completion']);
+        $multiMatch->setOperator('AND');
         $multiMatch->setType('cross_fields');
         $multiMatch->setQuery($queryString);
 
@@ -711,7 +711,6 @@ class Query
             ]
         ];
 
-        foreach (explode(' ', $queryString) as $string) {
             $body['query']['bool']['must'][] = [
                 'multi_match' => [
                     'fields' => [
@@ -719,14 +718,13 @@ class Query
                         'fulltext',
                         'fulltext_boosted'
                     ],
-                    'operator' => 'OR',
+                    'operator' => 'AND',
                     'type' => 'best_fields',
-                    'query' => "$string",
+                    'query' => "$queryString",
                     'fuzziness' => 'AUTO',
                     "zero_terms_query" => "all"
                 ],
             ];
-        }
 
         $result = $this->getConnection()->search(
             [
