@@ -659,7 +659,7 @@ class Query
     public function setQueryString($queryString)
     {
         $multiMatch = new MultiMatch();
-        $multiMatch->setFields(['fulltext', 'completion', 'fulltext_boosted']);
+        $multiMatch->setFields(['name^2', 'sku^2', 'fulltext_boosted', 'fulltext', 'completion']);
         $multiMatch->setOperator('OR');
         $multiMatch->setType('cross_fields');
         $multiMatch->setQuery($queryString);
@@ -679,13 +679,13 @@ class Query
         $indexName = $this->getIndexName();
 
         $filter = [];
-        #foreach ($attributSetFilter as $attributeId) {
-        #    $filter[] = [
-        #        'terms' => [
-        #            'attribute_set_id' => $attributSetFilter
-        #        ]
-        #    ];
-        #}
+        foreach ($attributSetFilter as $attributeId) {
+            $filter[] = [
+               'term' => [
+                    'attribute_set_id' => $attributeId
+                ]
+            ];
+        }
         $filter[] = [
             'terms' => [
                 'visibility' => [
@@ -774,10 +774,6 @@ class Query
         $facet->setId($type);
         $facet->setCode($type);
         $facet->setDocCount(0);
-
-        #echo '<pre>';
-        #print_r($aggregations['facets_numeric']['facets_numeric']);
-        #die();
 
         if (
             array_key_exists($type, $aggregations)
