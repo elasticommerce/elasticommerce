@@ -282,6 +282,14 @@ class Settings
     }
 
     /**
+     * @return int
+     */
+    public function getTotalFieldsLimit(): int
+    {
+        return $this->indexConfig->getTotalFieldsLimit();
+    }
+
+    /**
      * @return CharFilterCollection
      */
     public function getCharFilter(): CharFilterCollection

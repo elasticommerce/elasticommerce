@@ -66,6 +66,7 @@ class IndexFacade
                     'refresh_interval' => "10s",
                     'number_of_shards' => $indexSettings->getNumberOfShards(),
                     'number_of_replicas' => $indexSettings->getNumberOfReplicas(),
+                    'index.mapping.total_fields.limit' => $indexSettings->getTotalFieldsLimit(),
                     'analysis' => [
                         'analyzer' => $indexSettings->getAnalyzer()->toSchema(),
                         'char_filter' => $indexSettings->getCharFilter()->toSchema(),
