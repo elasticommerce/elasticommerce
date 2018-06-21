@@ -7,6 +7,7 @@ use Elastica\Aggregation\GlobalAggregation;
 use Elastica\Aggregation\Histogram;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Terms;
+use Elastica\Query\AbstractQuery;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MultiMatch;
 use Elastica\Query\Term;
@@ -666,6 +667,17 @@ class Query
 
         $this->_filter[] = $multiMatch;
 
+        return $this;
+    }
+
+    /**
+     * addCustomFilter
+     *
+     * @param AbstractQuery $query
+     */
+    public function addCustomFilter(AbstractQuery $query)
+    {
+        $this->_filter[] = $query;
         return $this;
     }
 
