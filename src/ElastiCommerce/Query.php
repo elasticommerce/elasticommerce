@@ -546,9 +546,6 @@ class Query
      */
     public function load()
     {
-        header('Content-Type: application/json');
-
-
         $query = new \Elastica\Query();
         $querry = [
             'query' => []
