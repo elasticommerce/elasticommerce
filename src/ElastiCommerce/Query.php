@@ -477,6 +477,7 @@ class Query
         $filter->setQuery($boolQuery);
         $this->_filter[] = $filter;
 
+
         return $this;
     }
 
@@ -525,9 +526,18 @@ class Query
         }
 
         $filter->setPath($path);
+        $boolQuery = new BoolQuery();
+
         $rangeFilter = new \Elastica\Query\Range();
         $rangeFilter->addField($path . '.value', ['from' => $min, 'to' => $max]);
-        $filter->setQuery($rangeFilter);
+
+        $fieldQuery = new Term();
+        $fieldQuery->setParam($path . '.name', (string)$fieldName);
+
+        $boolQuery->addMust($rangeFilter);
+        $boolQuery->addMust($fieldQuery);
+
+        $filter->setQuery($boolQuery);
         $this->_filter[] = $filter;
 
         return $this;
