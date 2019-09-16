@@ -224,7 +224,7 @@ class Indexer
         $this->getBulk()->walk(function ($item) use (&$params, $indexName) {
             $params = array_merge($params, $item->getBulkArray($indexName));
         });
-        $result = $this->getConnection()->bulk(['body' => $params]);
+        $result = $this->getConnection()->bulk(['body' => $params, 'refresh' => 'wait_for']);
         foreach ($result['items'] as $element){
             if($element['index']['_id'] == 'product_417'){
                 var_dump($element);
